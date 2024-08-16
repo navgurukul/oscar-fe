@@ -1,0 +1,31 @@
+/* SignupPage.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  font-family: "Fraunces, Arial, sans-serif" !important;
+  padding: 20px;
+  box-sizing: border-box; /* Ensure padding is included in the width and height calculations */
+}
+
+.centerText {
+  text-align: center;
+  padding: 0 20px;
+}
+
+.dialogPaper {
+  background-color: #fff;
+  text-align: center;
+  padding: 20px;
+  padding-block: 40px;
+  border-radius: 20px;
+}
+
+.dialogTitle {
+  font-weight: bold;
+}
+
+
+
+
