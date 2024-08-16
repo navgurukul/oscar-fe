@@ -1,74 +1,72 @@
-
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px; 
-    padding-bottom: 16px; 
-    scroll-behavior: smooth;
-    padding-inline:200px;
-  }
-  
-  .box {
-    width: 100%;
-    text-align: left;
-    flex: 1;
-  }
-  
-  .transcriptBox {
-    margin-top: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  /* .notesBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  scroll-behavior: smooth;
+  padding-inline: 200px;
+}
+
+.box {
+  width: 100%;
+  text-align: left;
+  flex: 1;
+}
+
+.transcriptBox {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* .notesBox {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     justify-content: center;
   } */
-  
-  .noteBox {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
-    background-color:#B9D9D7;
-  }
-  
-  .micContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 16px;
-    color: white;
-  }
-  
-  .outerCircle {
-    background-color: #cae9eb;
-    border-radius: 50%;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .innerCircle {
-    background-color: #51A09B;
-    border-radius: 50%;
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+
+.noteBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #b9d9d7;
+}
+
+.micContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  color: white;
+}
+
+.outerCircle {
+  background-color: #cae9eb;
+  border-radius: 50%;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.innerCircle {
+  background-color: #51a09b;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Container for notes */
 .notesBox {
@@ -99,8 +97,8 @@
 /* Ensure text wraps properly and fits within the note box */
 .noteText {
   margin: 0;
-  white-space: pre-wrap; 
-  overflow: hidden; 
+  white-space: pre-wrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -109,7 +107,6 @@
   bottom: 0;
   margin-bottom: 20px;
 }
-
 
 @keyframes pulse {
   0% {
@@ -129,7 +126,6 @@
   margin-bottom: 20px;
 } */
 
-
 .outerCircle {
   background-color: hsl(189, 45%, 86%);
   border-radius: 50%;
@@ -137,7 +133,7 @@
 }
 
 .innerCircle {
-  background-color: #51A09B;
+  background-color: #51a09b;
   border-radius: 50%;
   padding: 5px;
 }
@@ -158,17 +154,24 @@
 
 .noteContent {
   max-height: 150px; /* Set a fixed height */
-  overflow-y: auto;  /* Enable vertical scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
   padding-right: 20px; /* To avoid text hiding behind the delete icon */
 }
 
+.actions {
+  padding: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
 /* Media Queries for Responsiveness */
 
 /* For smaller screens, 768px and below */
 @media (max-width: 768px) {
   .container {
-    padding-inline:20px;
+    padding-inline: 20px;
   }
   .notesBox {
     grid-template-columns: repeat(2, 1fr); /* 2 columns */
@@ -182,7 +185,7 @@
 /* For extra small screens, 480px and below */
 @media (max-width: 480px) {
   .container {
-    padding-inline:10px;
+    padding-inline: 10px;
   }
   .notesBox {
     grid-template-columns: 1fr; /* 1 column */
@@ -192,5 +195,3 @@
     width: 100%; /* Full width */
   }
 }
-
-

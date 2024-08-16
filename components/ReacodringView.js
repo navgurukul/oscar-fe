@@ -20,8 +20,6 @@ import ProcessingAnimation from "./ProcessingAnimation";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DownloadIcon from "@mui/icons-material/Download";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import ShareIcon from "@mui/icons-material/Share";
-import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
 import AudioHeader from "./AudioHeader";
 import Tooltip from "@mui/material/Tooltip";
@@ -63,8 +61,7 @@ const ReacodringView = () => {
   };
 
   const handleResetRecording = () => {
-    setIsResetDialogOpen(false);
-    setIsDialogOpen(false);
+    setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
     setTranscript("");
     setCorrectedTranscript("");
@@ -73,12 +70,17 @@ const ReacodringView = () => {
     }
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
+    setIsResetDialogOpen(false); // Close the reset confirmation dialog
+
+    setTimeout(() => {
+      setIsDialogOpen(true); // Reopen the recording dialog
+      handleStartRecording(); // Start the recording process immediately
+    }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
   const handleResetRecordingLast = () => {
+    setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
-    setIsResetDialogOpen(false);
-    setIsDialogOpen(false);
     setTranscript("");
     setCorrectedTranscript("");
     if (recognitionRef.current) {
@@ -86,6 +88,12 @@ const ReacodringView = () => {
     }
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
+    setIsDialogOpen(false); // Close the current dialog
+
+    setTimeout(() => {
+      setIsDialogOpen(true); // Reopen the dialog to start recording again
+      handleStartRecording(); // Start the recording process immediately
+    }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
   const handleStartRecording = () => {
@@ -94,7 +102,7 @@ const ReacodringView = () => {
     recognitionRef.current = new window.webkitSpeechRecognition();
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = "en-US";
+    // recognitionRef.current.lang = "en-US";
 
     let finalTranscript = "";
 
@@ -291,41 +299,14 @@ const ReacodringView = () => {
     element.download = "transcript.txt";
     document.body.appendChild(element);
     element.click();
+    setTimeout(() => handleTooltipChange("download", "Download note"), 2000);
   };
 
-  const handleCopyNote = () => {
+  const handleCopyNote = (correctedTranscript) => {
     navigator.clipboard.writeText(correctedTranscript).then(() => {
       handleTooltipChange("copy", "Copied!");
+      setTimeout(() => handleTooltipChange("copy", "Copy to clipboard"), 2000);
     });
-  };
-
-  const handleShareNote = async () => {
-    if (navigator.share && navigator.canShare) {
-      try {
-        await navigator.share({
-          title: "Transcript Note",
-          text: correctedTranscript,
-          url: window.location.href,
-        });
-        // alert("Note shared successfully");
-      } catch (error) {
-        console.error("Error sharing note:", error);
-      }
-    } else {
-      // Fallback for unsupported browsers
-      navigator.clipboard.writeText(correctedTranscript).then(() => {
-        handleTooltipChange(
-          "share",
-          "Text copied to clipboard! You can share."
-        );
-      });
-    }
-  };
-
-  const handleEditNote = () => {
-    // Enable editing mode or open an editor for the correctedTranscript
-    // For example, you could set a state variable that makes the correctedTranscript editable
-    // setIsEditing(true);
   };
 
   const handleDeleteCurrentNote = () => {
@@ -370,15 +351,35 @@ const ReacodringView = () => {
                       {note.transcribedText}
                     </Typography>
                   </Box>
-                  <IconButton
-                    className={styles.deleteIcon}
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => handleDeleteNote(note.id)}
-                    sx={{ marginLeft: "80%" }}
-                  >
-                    <DeleteOutlineIcon />
-                  </IconButton>
+                  <Box className={styles.actions}>
+                    <Tooltip title={tooltipTexts.copy}>
+                      <IconButton
+                        edge="end"
+                        aria-label="copy"
+                        onClick={() => handleCopyNote(note.transcribedText)}
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={tooltipTexts.download}>
+                      <IconButton
+                        edge="end"
+                        aria-label="download"
+                        onClick={() => handleDownloadNote(note.transcribedText)}
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={tooltipTexts.delete}>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDeleteNote(note.id)}
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
                 </Box>
               ))}
             </Box>
@@ -396,9 +397,6 @@ const ReacodringView = () => {
           }}
         >
           <Box
-            // className={`${styles.micContainer} ${
-            //   isRecord ? styles.recording : ""
-            // }`}
             className={`${styles.micContainer}`}
             style={{ marginBottom: "10px" }}
           >
@@ -437,11 +435,19 @@ const ReacodringView = () => {
             alignItems: "center",
           }}
         >
-          <DialogTitle sx={{ color: "#4d4d4d" }}>
+          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" }}>
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && "Your transcript is ready!"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "200px",
+            }}
+          >
             {!correctedTranscript && (
               <>
                 <Typography variant="h6" sx={{ color: "#4d4d4d" }}>
@@ -450,8 +456,6 @@ const ReacodringView = () => {
                         -2
                       )}`
                     : ""}
-
-                  {/* {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)} */}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
                   {isRecord ? (
@@ -468,7 +472,7 @@ const ReacodringView = () => {
               </Typography>
             )}
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
             {!correctedTranscript && (
               <IconButton onClick={handleCloseDialog} color="secondary">
                 <RestartAltIcon sx={{ color: "#51a09b" }} />
@@ -491,19 +495,12 @@ const ReacodringView = () => {
                       <RestartAltIcon sx={{ color: "#51A09B" }} />
                     </IconButton>
                   </Tooltip>
-                  {/* <Tooltip title="Edit note">
-                  <IconButton onClick={handleEditNote} color="primary">
-                    <EditIcon sx={{ color: "#51A09B" }} />
-                  </IconButton>
-                  </Tooltip> */}
                   <Tooltip title={tooltipTexts.copy}>
-                    <IconButton onClick={handleCopyNote} color="primary">
+                    <IconButton
+                      onClick={() => handleCopyNote(correctedTranscript)}
+                      color="primary"
+                    >
                       <ContentCopyIcon sx={{ color: "#51A09B" }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={tooltipTexts.share}>
-                    <IconButton onClick={handleShareNote} color="primary">
-                      <ShareIcon sx={{ color: "#51A09B" }} />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={tooltipTexts.download}>
