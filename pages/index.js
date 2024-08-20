@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import HomePage from "@/components/Home/HomePage";
+import { Box } from "@mui/material";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -23,9 +24,9 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <Box>
       <HomePage />
-    </div>
+    </Box>
   );
 };
 

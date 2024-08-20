@@ -21,6 +21,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
   const onSignIn = async (credentialResponse) => {
     setLoading(true);
     const idToken = credentialResponse.credential;
+    console.log(idToken)
     try {
       // Send the idToken to your backend API
       const response = await axios.post(
@@ -34,7 +35,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       // console.log(response.data.data.token,"Hello",response.data.data.user)
       localStorage.setItem("googleToken", response.data.data.token);
       localStorage.setItem("googleUser", JSON.stringify(response.data.data));
-      router.push("/Audio");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error during API call:", error);
     } finally {
