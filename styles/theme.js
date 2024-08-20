@@ -21,6 +21,12 @@ const theme = createTheme({
       fontWeight: 600,
       margin: '20px 0',
     },
+    h4: {
+      fontSize: '2rem',
+      fontWeight: 700,
+      fontFamily: 'Georgia, serif', // Different font family for h4
+      margin: '15px 0',
+    },
     h6: {
       fontSize: '1.25rem',
       fontWeight: 500,

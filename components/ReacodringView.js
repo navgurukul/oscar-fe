@@ -328,7 +328,7 @@ const ReacodringView = () => {
       <AudioHeader notes={notes} />
       <Box className={styles.container}>
         <Box className={styles.box}>
-          <Typography variant="h5" mb={2} color={"#4D4D4D"}>
+          <Typography variant="h5" mb={2} fontWeight={700} color={"#51A09B"}>
             My Transcripts ({notes.length})
           </Typography>
           {!notes.length > 0 ? (
@@ -417,7 +417,7 @@ const ReacodringView = () => {
             {notes.length > 0 ? (
               "Transcribe your thoughts in a click"
             ) : (
-              <Typography fontWeight={400} align="center">
+              <Typography variant="h6" align="center" fontWeight={700} color={"#51A09B"}>
                 Tap the mic to start
               </Typography>
             )}
@@ -430,14 +430,16 @@ const ReacodringView = () => {
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
-              height: !isRecord ? "400px" : "auto",
+              // height: !isRecord ? "600px" : "auto",
+              height: "500px",
+              width:"1000px"
             },
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" }}>
+          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" ,fontWeight:"600"}}>
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && "Your transcript is ready!"}
           </DialogTitle>
@@ -474,10 +476,10 @@ const ReacodringView = () => {
               </Typography>
             )}
           </DialogContent>
-          <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+          <DialogActions sx={{ display: "flex", justifyContent: "center",gap:"60px" }}>
             {!correctedTranscript && isRecord && (
-              <IconButton onClick={handleCloseDialog} color="secondary">
-                <RestartAltIcon sx={{ color: "#51a09b" }} />
+              <IconButton onClick={handleCloseDialog} color="secondary" sx={{padding:"12px",backgroundColor:"#51a09b"}}>
+                <RestartAltIcon sx={{ color: "#fff" }} />
               </IconButton>
             )}
             {correctedTranscript && (
@@ -522,8 +524,8 @@ const ReacodringView = () => {
               </>
             )}
             {isRecord && !correctedTranscript ? (
-              <IconButton onClick={handleStopRecording} color="primary">
-                <StopIcon sx={{ color: "#51a09b" }} />
+              <IconButton onClick={handleStopRecording} color="primary" sx={{padding:"12px",backgroundColor:"#51a09b",}}>
+                <StopIcon sx={{ color: "#fff" }} />
               </IconButton>
             ) : correctedTranscript ? (
               <Button

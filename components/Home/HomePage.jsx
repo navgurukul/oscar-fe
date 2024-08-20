@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import HeroSection from "./Login";
+import Login from "./Login";
 import HowWork from "./HowWork";
 import DownLoadAppstore from "./DownLoadAppstore";
 import ContactSection from "./ContactSection";
@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <Header />
-      <HeroSection />
+      <Login />
       <HowWork />
       <DownLoadAppstore />
       <ContactSection />

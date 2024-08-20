@@ -21,6 +21,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
   const onSignIn = async (credentialResponse) => {
     setLoading(true);
     const idToken = credentialResponse.credential;
+    console.log(idToken)
     try {
       // Send the idToken to your backend API
       const response = await axios.post(

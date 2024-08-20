@@ -15,14 +15,17 @@ const LoginSection = () => {
   return (
     <Container maxWidth="lg" sx={{pt:2}}>
       <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
-        Speech to Text - Voice Typing & Transcription
+        {/* Speech to Text - Voice Typing & Transcription */}
+        Say it. See it. Save it or Share it.
       </Typography>
       <Box>
       <Typography variant="body1" align="center" fontWeight={700}>
-        Take notes with your voice for free, or automatically transcribe audio &
+      Speak, and watch your ideas seamlessly flow into polished text.
       </Typography>
       <Typography variant="body1" align="center" fontWeight={700}>
-        video recordings. Secure, accurate & blazing fast.
+        {/* video recordings. Secure, accurate & blazing fast. */}
+        Whether it’s notes, emails, or articles, all you need to do is talk. We’ll handle the rest
+
       </Typography>
       </Box>
       <Grid container justifyContent="center" sx={{ my: 4}}>
