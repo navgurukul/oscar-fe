@@ -54,6 +54,7 @@ const ReacodringView = () => {
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
+    
   };
 
   const handleCloseDialog = () => {
@@ -81,8 +82,8 @@ const ReacodringView = () => {
   const handleResetRecordingLast = () => {
     setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
-    setTranscript("");
-    setCorrectedTranscript("");
+    // setTranscript("");
+    // setCorrectedTranscript("");
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -317,7 +318,7 @@ const ReacodringView = () => {
   };
 
   return (
-    <div
+    <Box
       style={{
         margin: 0,
         minHeight: "100vh",
@@ -325,7 +326,7 @@ const ReacodringView = () => {
       }}
     >
       <AudioHeader notes={notes} />
-      <div maxWidth="lg" className={styles.container}>
+      <Box className={styles.container}>
         <Box className={styles.box}>
           <Typography variant="h5" mb={2} color={"#4D4D4D"}>
             My Transcripts ({notes.length})
@@ -424,7 +425,8 @@ const ReacodringView = () => {
         </Box>
         <Dialog
           open={isDialogOpen}
-          onClose={handleCloseDialog}
+          // onClose={handleCloseDialog}
+          onClose={()=>setIsDialogOpen(false)}
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
@@ -473,7 +475,7 @@ const ReacodringView = () => {
             )}
           </DialogContent>
           <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
-            {!correctedTranscript && (
+            {!correctedTranscript && isRecord && (
               <IconButton onClick={handleCloseDialog} color="secondary">
                 <RestartAltIcon sx={{ color: "#51a09b" }} />
               </IconButton>
@@ -519,8 +521,11 @@ const ReacodringView = () => {
                 </Box>
               </>
             )}
-
-            {correctedTranscript ? (
+            {isRecord && !correctedTranscript ? (
+              <IconButton onClick={handleStopRecording} color="primary">
+                <StopIcon sx={{ color: "#51a09b" }} />
+              </IconButton>
+            ) : correctedTranscript ? (
               <Button
                 onClick={handleSaveNote}
                 color="primary"
@@ -529,11 +534,7 @@ const ReacodringView = () => {
               >
                 Save
               </Button>
-            ) : (
-              <IconButton onClick={handleStopRecording} color="primary">
-                <StopIcon sx={{ color: "#51a09b" }} />
-              </IconButton>
-            )}
+            ) : null}
           </DialogActions>
         </Dialog>
         <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
@@ -574,8 +575,8 @@ const ReacodringView = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default ReacodringView;

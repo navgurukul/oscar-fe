@@ -34,7 +34,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       // console.log(response.data.data.token,"Hello",response.data.data.user)
       localStorage.setItem("googleToken", response.data.data.token);
       localStorage.setItem("googleUser", JSON.stringify(response.data.data));
-      router.push("/Audio");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error during API call:", error);
     } finally {

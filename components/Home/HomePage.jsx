@@ -8,13 +8,13 @@ import Footer from "./Footer";
 
 const HomePage = () => {
   return (
-    <div style={{backgroundColor:"#fff"}}>
-    <Header/>
-    <HeroSection/>
-    <HowWork/>
-    <DownLoadAppstore/>
-    <ContactSection/>
-    <Footer/>
+    <div style={{ backgroundColor: "#fff" }}>
+      <Header />
+      <HeroSection />
+      <HowWork />
+      <DownLoadAppstore />
+      <ContactSection />
+      <Footer />
     </div>
   );
 };
