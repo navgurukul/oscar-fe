@@ -352,7 +352,7 @@ const ReacodringView = () => {
                       {note.transcribedText}
                     </Typography>
                   </Box>
-                  <Box className={styles.actions}>
+                  <Box display="flex" justifyContent="space-between" gap="90px" mb={-1}>
                     <Tooltip title={tooltipTexts.copy}>
                       <IconButton
                         edge="end"

@@ -55,8 +55,8 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       PaperProps={{ className: styles.dialogPaper }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        <Typography variant="h6" color="gray">
-          To start recording Login first to continue
+        <Typography variant="h6" color="#51A09B">
+          Please Log in to continue
         </Typography>
       </DialogTitle>
       <DialogContent>

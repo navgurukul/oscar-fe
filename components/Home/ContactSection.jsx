@@ -1,3 +1,6 @@
+
+
+
 import React from "react";
 import {
   Typography,
@@ -24,8 +27,8 @@ const ContactSection = () => {
               Contact us
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Do you have any doubts or feedback for us. Please fill out the
-              form, and we’ll get back to you as soon as possible
+              If you have any doubts or feedback, please fill out the
+              form, and we’ll get back to you as soon as possible.
             </Typography>
           </Box>
         </Grid>

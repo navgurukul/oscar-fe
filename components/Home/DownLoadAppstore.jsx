@@ -11,7 +11,7 @@ const DownLoadAppstore = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          paddingBlock: "40px",
+          paddingBlock: "8px",
           mt:4
         }}
       >
@@ -28,6 +28,7 @@ const DownLoadAppstore = () => {
             height: "auto",
             maxWidth: "150px",
             border: "none",
+            paddingBottom:"8px"
           }}
         />
       </Box>
