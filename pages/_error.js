@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Loader from '@/components/Loader';
+import { Box } from '@mui/material';
 
 const ErrorPage = () => {
   const router = useRouter();
@@ -9,9 +11,9 @@ const ErrorPage = () => {
   }, [router]);
 
   return (
-    <div>
-      <h1 style={{ textAlign: "center", marginTop: "20%" }}>This page is not Found</h1>
-    </div>
+    <Box>
+     <Loader/>
+    </Box>
   );
 };
 

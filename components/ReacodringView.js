@@ -54,6 +54,7 @@ const ReacodringView = () => {
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
+    
   };
 
   const handleCloseDialog = () => {
@@ -81,8 +82,8 @@ const ReacodringView = () => {
   const handleResetRecordingLast = () => {
     setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
-    setTranscript("");
-    setCorrectedTranscript("");
+    // setTranscript("");
+    // setCorrectedTranscript("");
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -317,7 +318,7 @@ const ReacodringView = () => {
   };
 
   return (
-    <div
+    <Box
       style={{
         margin: 0,
         minHeight: "100vh",
@@ -325,9 +326,9 @@ const ReacodringView = () => {
       }}
     >
       <AudioHeader notes={notes} />
-      <div maxWidth="lg" className={styles.container}>
+      <Box className={styles.container}>
         <Box className={styles.box}>
-          <Typography variant="h5" mb={2} color={"#4D4D4D"}>
+          <Typography variant="h5" mb={2} fontWeight={700} color={"#51A09B"}>
             My Transcripts ({notes.length})
           </Typography>
           {!notes.length > 0 ? (
@@ -416,7 +417,7 @@ const ReacodringView = () => {
             {notes.length > 0 ? (
               "Transcribe your thoughts in a click"
             ) : (
-              <Typography fontWeight={400} align="center">
+              <Typography variant="h6" align="center" fontWeight={700} color={"#51A09B"}>
                 Tap the mic to start
               </Typography>
             )}
@@ -424,18 +425,21 @@ const ReacodringView = () => {
         </Box>
         <Dialog
           open={isDialogOpen}
-          onClose={handleCloseDialog}
+          // onClose={handleCloseDialog}
+          onClose={()=>setIsDialogOpen(false)}
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
-              height: !isRecord ? "400px" : "auto",
+              // height: !isRecord ? "600px" : "auto",
+              height: "500px",
+              width:"1000px"
             },
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" }}>
+          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" ,fontWeight:"600"}}>
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && "Your transcript is ready!"}
           </DialogTitle>
@@ -472,10 +476,10 @@ const ReacodringView = () => {
               </Typography>
             )}
           </DialogContent>
-          <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
-            {!correctedTranscript && (
-              <IconButton onClick={handleCloseDialog} color="secondary">
-                <RestartAltIcon sx={{ color: "#51a09b" }} />
+          <DialogActions sx={{ display: "flex", justifyContent: "center",gap:"60px" }}>
+            {!correctedTranscript && isRecord && (
+              <IconButton onClick={handleCloseDialog} color="secondary" sx={{padding:"12px",backgroundColor:"#51a09b"}}>
+                <RestartAltIcon sx={{ color: "#fff" }} />
               </IconButton>
             )}
             {correctedTranscript && (
@@ -519,8 +523,11 @@ const ReacodringView = () => {
                 </Box>
               </>
             )}
-
-            {correctedTranscript ? (
+            {isRecord && !correctedTranscript ? (
+              <IconButton onClick={handleStopRecording} color="primary" sx={{padding:"12px",backgroundColor:"#51a09b",}}>
+                <StopIcon sx={{ color: "#fff" }} />
+              </IconButton>
+            ) : correctedTranscript ? (
               <Button
                 onClick={handleSaveNote}
                 color="primary"
@@ -529,11 +536,7 @@ const ReacodringView = () => {
               >
                 Save
               </Button>
-            ) : (
-              <IconButton onClick={handleStopRecording} color="primary">
-                <StopIcon sx={{ color: "#51a09b" }} />
-              </IconButton>
-            )}
+            ) : null}
           </DialogActions>
         </Dialog>
         <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
@@ -574,8 +577,8 @@ const ReacodringView = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 export default ReacodringView;
