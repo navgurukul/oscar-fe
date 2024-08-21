@@ -25,7 +25,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
     try {
       // Send the idToken to your backend API
       const response = await axios.post(
-        "https://dev-oscar.merakilearn.org/api/v1/auth/login/google",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/login/google`,
         {
           idToken: idToken,
         }

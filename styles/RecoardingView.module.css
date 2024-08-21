@@ -159,11 +159,10 @@
 }
 
 .actions {
-  padding: 5px;
+  padding-top: 5px;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: space-between;
 }
 
 /* Media Queries for Responsiveness */

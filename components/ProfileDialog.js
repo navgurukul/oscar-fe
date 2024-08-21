@@ -42,7 +42,7 @@ const ProfileDialog = ({ open, onClose }) => {
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-        <DialogTitle textAlign="center">Student Details</DialogTitle>
+        <DialogTitle textAlign="center">Account Details</DialogTitle>
         <DialogContent>
           {userDetails ? (
             <Box
@@ -63,8 +63,8 @@ const ProfileDialog = ({ open, onClose }) => {
                 {userDetails.email}
               </Typography>
               {/* Add other details as needed */}
-              <Divider sx={{ width: "100%", my: 2 }} />
-              <Button
+              <Divider sx={{ width: "100%", my: 2, mt:5}} />
+              {/* <Button
                 onClick={handleOpenAccountDialog}
                 variant="outlined"
                 fullWidth
@@ -94,13 +94,13 @@ const ProfileDialog = ({ open, onClose }) => {
                 sx={{ mt: 1 }}
               >
                 Demo File
-              </Button>
+              </Button> */}
             </Box>
           ) : (
             <Typography variant="body1">No user details found.</Typography>
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions style={{display:"flex", justifyContent:"space-around"}}>
           <Button onClick={handleLogout} variant="contained" color="primary">
             Logout
           </Button>

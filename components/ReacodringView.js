@@ -175,7 +175,7 @@ const ReacodringView = () => {
   const saveTranscriptToAPI = async (transcript) => {
     try {
       const response = await fetch(
-        "https://dev-oscar.merakilearn.org/api/v1/transcriptions/add",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/add`,
         {
           method: "POST",
           headers: {
@@ -202,7 +202,7 @@ const ReacodringView = () => {
   const fetchTranscriptions = async () => {
     try {
       const response = await fetch(
-        "https://dev-oscar.merakilearn.org/api/v1/transcriptions",
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions`,
         {
           method: "GET",
           headers: {
@@ -244,7 +244,7 @@ const ReacodringView = () => {
   const confirmDeleteNote = async () => {
     try {
       const response = await fetch(
-        `https://dev-oscar.merakilearn.org/api/v1/transcriptions/${noteToDelete.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/${noteToDelete.id}`,
         {
           method: "DELETE",
           headers: {
