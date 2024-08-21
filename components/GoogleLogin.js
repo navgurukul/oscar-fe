@@ -21,7 +21,6 @@ const GoogleLoginComponent = ({ open, onClose }) => {
   const onSignIn = async (credentialResponse) => {
     setLoading(true);
     const idToken = credentialResponse.credential;
-    console.log(idToken)
     try {
       // Send the idToken to your backend API
       const response = await axios.post(
@@ -31,8 +30,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
         }
       );
       // Handle the response from your backend API
-      // console.log(response.data.data)
-      // console.log(response.data.data.token,"Hello",response.data.data.user)
+
       localStorage.setItem("googleToken", response.data.data.token);
       localStorage.setItem("googleUser", JSON.stringify(response.data.data));
       router.push("/dashboard");
@@ -55,8 +53,8 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       PaperProps={{ className: styles.dialogPaper }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        <Typography variant="h6" color="gray">
-          To start recording Login first to continue
+        <Typography variant="h6" color="#51A09B">
+          Please Log in to continue
         </Typography>
       </DialogTitle>
       <DialogContent>

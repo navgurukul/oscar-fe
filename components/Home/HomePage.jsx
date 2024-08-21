@@ -13,8 +13,8 @@ const HomePage = () => {
       <Login />
       <HowWork />
       <DownLoadAppstore />
-      <ContactSection />
-      <Footer />
+      {/* <ContactSection /> */}
+      {/* <Footer /> */}
     </div>
   );
 };

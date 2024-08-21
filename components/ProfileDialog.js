@@ -104,9 +104,9 @@ const ProfileDialog = ({ open, onClose }) => {
           <Button onClick={handleLogout} variant="contained" color="primary">
             Logout
           </Button>
-          <Button onClick={onClose} variant="outlined" color="secondary">
+          {/* <Button onClick={onClose} variant="outlined" color="secondary">
             Close
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
 

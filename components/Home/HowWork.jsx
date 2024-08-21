@@ -1,11 +1,11 @@
 import React from "react";
-import { Typography, Container, Button, Grid, Paper,Box } from "@mui/material";
+import { Typography, Container, Button, Grid, Paper, Box } from "@mui/material";
 import Image from "next/image";
 
 const HowWork = () => {
   return (
-    <Container maxWidth="md">
-      <Typography variant="h5" mt={7} textAlign="center" pb={2}>
+    <Container maxWidth="lg">
+      <Typography variant="h4" textAlign="center" p={10}>
         How it works?
       </Typography>
       <Grid container spacing={1} justifyContent="center">
@@ -14,12 +14,12 @@ const HowWork = () => {
             <Image
               src="/images/Frame (1).png"
               alt="Get it on Google Play"
-              width={100}
-              height={100}
+              width={150}
+              height={150}
             />
             <Typography variant="h6">Speech your thoughts</Typography>
             <Typography variant="body2">
-              You can download our app from Google Play or AppStore.
+              Simply talk, and let your voice express your ideas.
             </Typography>
           </Box>
         </Grid>
@@ -28,12 +28,13 @@ const HowWork = () => {
             <Image
               src="/images/Frame.png"
               alt="Get it on Google Play"
-              width={100}
-              height={100}
+              width={150}
+              height={150}
             />
-            <Typography variant="h6">Let AI Do its magic</Typography>
+            <Typography variant="h6">Let AI do its magic</Typography>
             <Typography variant="body2">
-              You can download our app from Google Play or AppStore.
+              Our AI instantly converts your spoken words into clear, polished
+              text.
             </Typography>
           </Box>
         </Grid>
@@ -42,12 +43,12 @@ const HowWork = () => {
             <Image
               src="/images/Frame (2).png"
               alt="Get it on Google Play"
-              width={100}
-              height={100}
+              width={150}
+              height={150}
             />
-            <Typography variant="h6">Download Text</Typography>
+            <Typography variant="h6">Download your text</Typography>
             <Typography variant="body2">
-              You can download our app from Google Play or AppStore.
+              Save your perfectly formatted text with a single click.
             </Typography>
           </Box>
         </Grid>

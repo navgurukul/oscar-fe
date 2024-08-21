@@ -348,7 +348,7 @@ const ReacodringView = () => {
               {notes.map((note, index) => (
                 <Box key={index} className={styles.noteBox}>
                   <Box className={styles.noteContent}>
-                    <Typography variant="body1" className={styles.noteText}>
+                    <Typography variant="body2" className={styles.noteText}>
                       {note.transcribedText}
                     </Typography>
                   </Box>
@@ -362,7 +362,7 @@ const ReacodringView = () => {
                         <ContentCopyIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={tooltipTexts.download}>
+                    {/* <Tooltip title={tooltipTexts.download}>
                       <IconButton
                         edge="end"
                         aria-label="download"
@@ -370,7 +370,7 @@ const ReacodringView = () => {
                       >
                         <DownloadIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title={tooltipTexts.delete}>
                       <IconButton
                         edge="end"
