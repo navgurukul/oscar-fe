@@ -54,11 +54,13 @@ const ReacodringView = () => {
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
+    startTimer();
     
   };
 
   const handleCloseDialog = () => {
     setIsResetDialogOpen(true); // Open the reset confirmation dialog instead of closing the main dialog
+    clearInterval(timerRef.current);
   };
 
   const handleResetRecording = () => {
