@@ -22,18 +22,15 @@ const GoogleLoginComponent = ({ open, onClose }) => {
     setLoading(true);
     const idToken = credentialResponse.credential;
     try {
-      // Send the idToken to your backend API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/login/google`,
         {
           idToken: idToken,
         }
       );
-      // Handle the response from your backend API
-
       localStorage.setItem("googleToken", response.data.data.token);
       localStorage.setItem("googleUser", JSON.stringify(response.data.data));
-      router.push("/dashboard");
+      router.push("/dashboard?message=Login successful!");
     } catch (error) {
       console.error("Error during API call:", error);
     } finally {

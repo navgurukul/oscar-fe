@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Box, Snackbar, Alert } from "@mui/material";
 import withAuth from '../components/WithAuth';
-import Audio from '../components/ReacodringView'
-import { Box } from "@mui/material";
+import Audio from '../components/ReacodringView';
+import { useRouter } from "next/router";
 
-const dashboard = () => {
+const Dashboard = () => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if there's a message in the URL
+    const { message } = router.query;
+    if (message) {
+      setSnackbarMessage(message);
+      setSnackbarOpen(true);
+      // Clear the message from URL after reading
+      router.replace('/dashboard', undefined, { shallow: true });
+    }
+  }, [router.query]);
+
   return (
     <Box>
-      <Audio/>
+      <Audio />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000} // 3 seconds
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
 
-export default withAuth(dashboard);
+export default withAuth(Dashboard);
