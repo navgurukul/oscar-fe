@@ -20,7 +20,6 @@ const HowWork = () => {
               alt="Get it on Google Play"
               width={150}
               height={150}
-              style={{ border: "2px solid #4d4d4d", borderRadius: "4px" }}
             />
           </Box>
             <Typography variant="h6">Speak your thoughts</Typography>
