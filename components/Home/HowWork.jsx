@@ -5,9 +5,12 @@ import Image from "next/image";
 const HowWork = () => {
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" textAlign="center" p={10}>
+      <Typography variant="h4" textAlign="center" pt={10} pb={5}>
         How it works?
       </Typography>
+      <Box display="flex" justifyContent="center" pb={4}>
+        <Image src="/images/Arrow 4.svg" alt="Arrow" width={100} height={100} />
+      </Box>
       <Grid container spacing={1} justifyContent="center">
         <Grid item xs={12} md={4}>
           <Box sx={{ p: 2, textAlign: "center" }}>
