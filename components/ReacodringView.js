@@ -636,7 +636,7 @@ const ReacodringView = () => {
             Reset the Recording
           </DialogTitle>
           <DialogContent mt={0}>
-            <Typography fontWeight={400} fontFamily="Karla" fontSize="18px">
+            <Typography fontWeight={400} fontSize="18px">
               Resetting the recording will erase the current audio note and{" "}
               <br />
               start a new one.

@@ -17,7 +17,7 @@ const LoginSection = () => {
         // height: "90vh",
         display: "flex",
         flexDirection: "column",
-        gap:"2.5rem"
+        gap: "2.5rem",
       }}
     >
       <Box>
@@ -26,11 +26,10 @@ const LoginSection = () => {
           align="center"
           fontSize={70}
           fontWeight={600}
-          fontFamily="Fraunces, sans-serif"
           pt={6}
           gutterBottom
         >
-        Speak it
+          Speak it
           <span style={{ color: "#51A09B" }}>.</span> See it
           <span style={{ color: "#51A09B" }}>.</span> Save it or Share it
           <span style={{ color: "#51A09B" }}>.</span>
@@ -38,37 +37,27 @@ const LoginSection = () => {
         <Typography
           variant="h3"
           align="center"
-          fontSize={50}
-          fontWeight={400}
-          fontFamily="cursive"
+          fontSize={70}
+          fontWeight={600}
+          color="#51A09B"
         >
           Effortlessly<span style={{ color: "#51A09B" }}>.</span>
         </Typography>
       </Box>
 
-      <Box style={{display:"flex", flexDirection:"column", gap:"10px"}}>
-        <Typography
-          variant="h5"
-          textAlign="center"
-          fontFamily="'DM Sans', sans-serif"
-          fontWeight="bold"
-        >
+      <Box style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Typography variant="h5" textAlign="center" fontWeight="bold">
           Speak and watch your ideas seamlessly flow into polished text.
         </Typography>
         <Typography
           variant="h5"
           textAlign="center"
           fontWeight="lighter"
-          fontFamily="'DM Sans', sans-serif"
+          fontFamily="Karla"
         >
           Whether it's notes, emails, or articles, all you need to do is Speak.
         </Typography>
-        <Typography
-          variant="h5"
-          textAlign="center"
-          fontWeight="lighter"
-          fontFamily="'DM Sans', sans-serif"
-        >
+        <Typography variant="h5" textAlign="center" fontWeight="lighter">
           We'll handle the rest.
         </Typography>
       </Box>
@@ -76,9 +65,8 @@ const LoginSection = () => {
         <Button
           variant="contained"
           color="primary"
-          sx={{ paddingInline: 5, paddingBlock: 1, mt:5 }}
+          sx={{ paddingInline: 5, paddingBlock: 1, mt: 5 }}
           onClick={handleClickOpen}
-        
         >
           <Image
             src="/images/Google Logo.png"

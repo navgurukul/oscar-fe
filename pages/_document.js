@@ -10,10 +10,10 @@ export default function Document() {
         <link rel="icon" href="/images/Oscar Logo png-1.png" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
+          href="https://fonts.googleapis.com/css?family=Spectral:400,700&display=swap"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap"
           rel="stylesheet"
         />
          <script src="https://apis.google.com/js/api.js" async defer></script>

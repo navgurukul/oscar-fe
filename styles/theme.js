@@ -15,27 +15,34 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: "Karla, sans-serif",
     h1: {
       fontSize: '2.5rem',
       fontWeight: 600,
       margin: '20px 0',
     },
+    h3:{
+      fontFamily:"Spectral, sans-serif"
+    },
     h4: {
       fontSize: '2rem',
       fontWeight: 700,
-      fontFamily: 'Georgia, serif', // Different font family for h4
+      // fontFamily: 'Georgia, serif', // Different font family for h4
       margin: '15px 0',
     },
     h6: {
       fontSize: '1.25rem',
-      fontWeight: 500,
+      fontWeight: 600,
       margin: '10px 0',
+      fontFamily:"Spectral, sans-serif"
     },
     body1: {
       fontSize: '1rem',
       margin: '10px 0',
     },
+    body2:{
+      fontFamily: "Karla, sans-serif"
+    }
   },
   components: {
     MuiButton: {
