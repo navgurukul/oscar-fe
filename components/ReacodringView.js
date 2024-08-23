@@ -381,7 +381,7 @@ const ReacodringView = () => {
                         aria-label="copy"
                         onClick={() => handleCopyNote(note.transcribedText)}
                       >
-                        <ContentCopyIcon />
+                        <ContentCopyIcon fontSize="small"/>
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title={tooltipTexts.download}>
@@ -399,7 +399,7 @@ const ReacodringView = () => {
                         aria-label="delete"
                         onClick={() => handleDeleteNote(note.id)}
                       >
-                        <DeleteOutlineIcon />
+                        <DeleteOutlineIcon fontSize="small"/>
                       </IconButton>
                     </Tooltip>
                   </Box>
