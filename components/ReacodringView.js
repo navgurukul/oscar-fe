@@ -117,6 +117,8 @@ const ReacodringView = () => {
       await navigator.mediaDevices.getUserMedia({ audio: true });
   
       // Proceed with recording if permission is granted
+      localStorage.setItem("finalText","");
+      setTranscript("");
       setCorrectedTranscript("");
       setIsRecord(true);
       recognitionRef.current = new window.webkitSpeechRecognition();
@@ -136,6 +138,7 @@ const ReacodringView = () => {
           }
         }
         setTranscript(finalTranscript + interimTranscript.trim());
+        localStorage.setItem("finalText", finalTranscript+interimTranscript.trim());
       };
       recognitionRef.current.start();
       startTimer();
@@ -149,7 +152,9 @@ const ReacodringView = () => {
     timerRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
-          handleStopRecording();
+          setTimeout(async () => {
+            await handleStopRecording();
+          },500)
           clearInterval(timerRef.current);
           return 0;
         }
@@ -159,12 +164,14 @@ const ReacodringView = () => {
   };
 
   const handleStopRecording = () => {
+    const value = localStorage.getItem("finalText");
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsRecord(false);
       // console.log("Recorded text:", transcript);
       setIsLoading(true);
-      run(transcript);
+      // run(transcript);
+      run(value);
     }
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
