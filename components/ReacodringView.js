@@ -38,6 +38,7 @@ const ReacodringView = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [showEraseConfirmation, setShowEraseConfirmation] = useState(false);
   const [tooltipTexts, setTooltipTexts] = useState({
     copy: "Copy to clipboard",
     share: "Share note",
@@ -54,8 +55,8 @@ const ReacodringView = () => {
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
+    setShowEraseConfirmation(false);
     startTimer();
-    
   };
 
   const handleCloseDialog = () => {
@@ -74,6 +75,7 @@ const ReacodringView = () => {
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
     setIsResetDialogOpen(false); // Close the reset confirmation dialog
+    setShowEraseConfirmation(false);
 
     setTimeout(() => {
       setIsDialogOpen(true); // Reopen the recording dialog
@@ -319,6 +321,24 @@ const ReacodringView = () => {
     setIsDialogOpen(false);
   };
 
+  const ShowEraseConfirmationFunction = () => {
+    setShowEraseConfirmation(true);
+    clearInterval(timerRef.current);
+  };
+
+  const handleCloseShowEraseConfirmation = () => {
+    setShowEraseConfirmation(false);
+    setIsDialogOpen(false);
+    setTranscript("");
+    setCorrectedTranscript("");
+    clearInterval(timerRef.current);
+    setTimer(3 * 60); // Reset timer to 3 minutes
+
+    setTimeout(() => {
+      handleStartRecording(); // Start the recording process immediately
+    }, 100);
+  };
+
   return (
     <Box
       style={{
@@ -417,9 +437,14 @@ const ReacodringView = () => {
 
           <Typography fontWeight={700} fontSize="18px" zIndex={1000}>
             {notes.length > 0 ? (
-              "Transcribe your thoughts in a click"
+              "Transcribe your thoughts with a click"
             ) : (
-              <Typography variant="h6" align="center" fontWeight={700} color={"#51A09B"}>
+              <Typography
+                variant="h6"
+                align="center"
+                fontWeight={700}
+                color={"#51A09B"}
+              >
                 Tap the mic to start
               </Typography>
             )}
@@ -428,20 +453,29 @@ const ReacodringView = () => {
         <Dialog
           open={isDialogOpen}
           // onClose={handleCloseDialog}
-          onClose={()=>setIsDialogOpen(false)}
+          // onClose={() => setIsDialogOpen(false)}
+
+          onClose={
+            isRecord || correctedTranscript
+              ? ShowEraseConfirmationFunction
+              : null
+          }
+          // onClose={ShowEraseConfirmationFunction}
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
               // height: !isRecord ? "600px" : "auto",
               height: "500px",
-              width:"1000px"
+              width: "1000px",
             },
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <DialogTitle sx={{ color: "#4d4d4d", textAlign: "center" ,fontWeight:"600"}}>
+          <DialogTitle
+            sx={{ color: "#4d4d4d", textAlign: "center", fontWeight: "600" }}
+          >
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && "Your transcript is ready!"}
           </DialogTitle>
@@ -478,9 +512,15 @@ const ReacodringView = () => {
               </Typography>
             )}
           </DialogContent>
-          <DialogActions sx={{ display: "flex", justifyContent: "center",gap:"60px" }}>
+          <DialogActions
+            sx={{ display: "flex", justifyContent: "center", gap: "60px" }}
+          >
             {!correctedTranscript && isRecord && (
-              <IconButton onClick={handleCloseDialog} color="secondary" sx={{padding:"12px",backgroundColor:"#51a09b"}}>
+              <IconButton
+                onClick={handleCloseDialog}
+                color="secondary"
+                sx={{ padding: "12px", backgroundColor: "#51a09b" }}
+              >
                 <RestartAltIcon sx={{ color: "#fff" }} />
               </IconButton>
             )}
@@ -501,35 +541,43 @@ const ReacodringView = () => {
                       <RestartAltIcon sx={{ color: "#51A09B" }} />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title={tooltipTexts.copy}>
-                    <IconButton
-                      onClick={() => handleCopyNote(correctedTranscript)}
-                      color="primary"
-                    >
-                      <ContentCopyIcon sx={{ color: "#51A09B" }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={tooltipTexts.download}>
+                  {correctedTranscript && transcript && (
+                    <>
+                      <Tooltip title={tooltipTexts.copy}>
+                        <IconButton
+                          onClick={() => handleCopyNote(correctedTranscript)}
+                          color="primary"
+                        >
+                          <ContentCopyIcon sx={{ color: "#51A09B" }} />
+                        </IconButton>
+                      </Tooltip>
+                      {/* <Tooltip title={tooltipTexts.download}>
                     <IconButton onClick={handleDownloadNote} color="primary">
                       <DownloadIcon sx={{ color: "#51A09B" }} />
                     </IconButton>
-                  </Tooltip>
-                  <Tooltip title={tooltipTexts.delete}>
-                    <IconButton
-                      onClick={handleDeleteCurrentNote}
-                      color="primary"
-                    >
-                      <DeleteOutlineIcon sx={{ color: "#51A09B" }} />
-                    </IconButton>
-                  </Tooltip>
+                  </Tooltip> */}
+                      <Tooltip title={tooltipTexts.delete}>
+                        <IconButton
+                          onClick={handleDeleteCurrentNote}
+                          color="primary"
+                        >
+                          <DeleteOutlineIcon sx={{ color: "#51A09B" }} />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  )}
                 </Box>
               </>
             )}
             {isRecord && !correctedTranscript ? (
-              <IconButton onClick={handleStopRecording} color="primary" sx={{padding:"12px",backgroundColor:"#51a09b",}}>
+              <IconButton
+                onClick={handleStopRecording}
+                color="primary"
+                sx={{ padding: "12px", backgroundColor: "#51a09b" }}
+              >
                 <StopIcon sx={{ color: "#fff" }} />
               </IconButton>
-            ) : correctedTranscript ? (
+            ) : correctedTranscript && transcript ? (
               <Button
                 onClick={handleSaveNote}
                 color="primary"
@@ -576,6 +624,33 @@ const ReacodringView = () => {
             </Button>
             <Button onClick={handleKeepRecording} variant="contained">
               Keep Recording
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={showEraseConfirmation}
+          onClose={handleCloseShowEraseConfirmation}
+        >
+          <DialogTitle>
+            {!correctedTranscript
+              ? "Doing this action will erase the current audio recording. Do you still wish to continue?"
+              : "Doing this action will delete your transcript. Do you still wish to continue?"}
+          </DialogTitle>
+          <DialogActions>
+            <Button
+              onClick={handleCloseShowEraseConfirmation}
+              color="secondary"
+              sx={{ border: "2px solid gray" }}
+            >
+              {!correctedTranscript ? "Erase" : "Yes"}
+            </Button>
+            <Button
+              onClick={handleKeepRecording}
+              color="primary"
+              sx={{ border: "2px solid gray" }}
+              autoFocus
+            >
+              {!correctedTranscript ? "Keep Recording" : "No"}
             </Button>
           </DialogActions>
         </Dialog>
