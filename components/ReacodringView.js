@@ -49,9 +49,19 @@ const ReacodringView = () => {
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
-  const handleToggleRecordingDialog = () => {
-    setIsDialogOpen(true);
+  const handleToggleRecordingDialog = async () => {
+    try {
+      // Check microphone permission
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+  
+      // If permission is granted, open the dialog and start recording
+      setIsDialogOpen(true);
+    } catch (error) {
+      // Show an alert if microphone permission is denied
+      alert("Microphone permission is disabled. Please enable it in your browser settings to start recording.");
+    }
   };
+  
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
@@ -101,32 +111,39 @@ const ReacodringView = () => {
     }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
-  const handleStartRecording = () => {
-    setCorrectedTranscript("");
-    setIsRecord(true);
-    recognitionRef.current = new window.webkitSpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
-    // recognitionRef.current.lang = "en-US";
-
-    let finalTranscript = "";
-
-    recognitionRef.current.onresult = (event) => {
-      let interimTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        if (result.isFinal) {
-          finalTranscript += result[0].transcript + " ";
-        } else {
-          interimTranscript += result[0].transcript + " ";
+  const handleStartRecording = async () => {
+    try {
+      // Check microphone permission
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+  
+      // Proceed with recording if permission is granted
+      setCorrectedTranscript("");
+      setIsRecord(true);
+      recognitionRef.current = new window.webkitSpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+  
+      let finalTranscript = "";
+  
+      recognitionRef.current.onresult = (event) => {
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            finalTranscript += result[0].transcript + " ";
+          } else {
+            interimTranscript += result[0].transcript + " ";
+          }
         }
-      }
-      setTranscript(finalTranscript + interimTranscript.trim());
-    };
-
-    recognitionRef.current.start();
-    startTimer();
-  };
+        setTranscript(finalTranscript + interimTranscript.trim());
+      };
+      recognitionRef.current.start();
+      startTimer();
+    } catch (error) {
+      // Show an alert if microphone permission is denied
+      alert("Microphone permission is disabled. Please enable it in your browser settings to start recording.");
+    }
+  };  
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
