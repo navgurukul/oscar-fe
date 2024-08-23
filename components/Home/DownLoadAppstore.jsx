@@ -16,7 +16,7 @@ const DownLoadAppstore = () => {
         }}
       >
         <Typography variant="h6" fontWeight={700} textAlign="center">
-          Try Transcription on the Go via Oscar App
+          Try transcription on the go with the Oscar App
         </Typography>
         <Image
           src="/images/Google Play.png"

@@ -30,7 +30,7 @@ const LoginSection = () => {
           pt={6}
           gutterBottom
         >
-          Say it
+        Speak it
           <span style={{ color: "#51A09B" }}>.</span> See it
           <span style={{ color: "#51A09B" }}>.</span> Save it or Share it
           <span style={{ color: "#51A09B" }}>.</span>
@@ -53,7 +53,7 @@ const LoginSection = () => {
           fontFamily="'DM Sans', sans-serif"
           fontWeight="bold"
         >
-          Speak, and watch your ideas seamlessly flow into polished text.
+          Speak and watch your ideas seamlessly flow into polished text.
         </Typography>
         <Typography
           variant="h5"
@@ -61,7 +61,7 @@ const LoginSection = () => {
           fontWeight="lighter"
           fontFamily="'DM Sans', sans-serif"
         >
-          Whether it's notes, emails, or articles, all you need to do is talk.
+          Whether it's notes, emails, or articles, all you need to do is Speak.
         </Typography>
         <Typography
           variant="h5"
