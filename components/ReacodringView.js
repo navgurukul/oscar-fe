@@ -53,15 +53,16 @@ const ReacodringView = () => {
     try {
       // Check microphone permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
-  
+
       // If permission is granted, open the dialog and start recording
       setIsDialogOpen(true);
     } catch (error) {
       // Show an alert if microphone permission is denied
-      alert("Microphone permission is disabled. Please enable it in your browser settings to start recording.");
+      alert(
+        "Microphone permission is disabled. Please enable it in your browser settings to start recording."
+      );
     }
   };
-  
 
   const handleKeepRecording = () => {
     setIsResetDialogOpen(false);
@@ -86,7 +87,6 @@ const ReacodringView = () => {
     setTimer(3 * 60); // Reset timer to 3 minutes
     setIsResetDialogOpen(false); // Close the reset confirmation dialog
     setShowEraseConfirmation(false);
-
     setTimeout(() => {
       setIsDialogOpen(true); // Reopen the recording dialog
       handleStartRecording(); // Start the recording process immediately
@@ -104,10 +104,9 @@ const ReacodringView = () => {
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
     setIsDialogOpen(false); // Close the current dialog
-
     setTimeout(() => {
       setIsDialogOpen(true); // Reopen the dialog to start recording again
-      handleStartRecording(); // Start the recording process immediately
+      // handleStartRecording(); // Start the recording process immediately
     }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
@@ -115,18 +114,18 @@ const ReacodringView = () => {
     try {
       // Check microphone permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
-  
+
       // Proceed with recording if permission is granted
-      localStorage.setItem("finalText","");
+      localStorage.setItem("finalText", "");
       setTranscript("");
       setCorrectedTranscript("");
       setIsRecord(true);
       recognitionRef.current = new window.webkitSpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-  
+
       let finalTranscript = "";
-  
+
       recognitionRef.current.onresult = (event) => {
         let interimTranscript = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -138,15 +137,20 @@ const ReacodringView = () => {
           }
         }
         setTranscript(finalTranscript + interimTranscript.trim());
-        localStorage.setItem("finalText", finalTranscript+interimTranscript.trim());
+        localStorage.setItem(
+          "finalText",
+          finalTranscript + interimTranscript.trim()
+        );
       };
       recognitionRef.current.start();
       startTimer();
     } catch (error) {
       // Show an alert if microphone permission is denied
-      alert("Microphone permission is disabled. Please enable it in your browser settings to start recording.");
+      alert(
+        "Microphone permission is disabled. Please enable it in your browser settings to start recording."
+      );
     }
-  };  
+  };
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
@@ -154,7 +158,7 @@ const ReacodringView = () => {
         if (prev <= 1) {
           setTimeout(async () => {
             await handleStopRecording();
-          },500)
+          }, 500);
           clearInterval(timerRef.current);
           return 0;
         }
@@ -380,7 +384,7 @@ const ReacodringView = () => {
           {!notes.length > 0 ? (
             <Box className={styles.transcriptBox}>
               <Image
-                src="/images/undraw_just_saying_re_kw9c 1.png"
+                src="/images/undraw_just_saying_re_kw9c 1.svg"
                 alt="Get it on Google Play"
                 width={100}
                 height={100}
@@ -405,7 +409,7 @@ const ReacodringView = () => {
                         aria-label="copy"
                         onClick={() => handleCopyNote(note.transcribedText)}
                       >
-                        <ContentCopyIcon fontSize="small"/>
+                        <ContentCopyIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title={tooltipTexts.download}>
@@ -423,7 +427,7 @@ const ReacodringView = () => {
                         aria-label="delete"
                         onClick={() => handleDeleteNote(note.id)}
                       >
-                        <DeleteOutlineIcon fontSize="small"/>
+                        <DeleteOutlineIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -501,7 +505,10 @@ const ReacodringView = () => {
             sx={{ color: "#4d4d4d", textAlign: "center", fontWeight: "600" }}
           >
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
-            {correctedTranscript && "Your transcript is ready!"}
+            {correctedTranscript && transcript && "Your transcript is ready!"}
+            {correctedTranscript &&
+              !transcript &&
+              "Please Provide Text"}
           </DialogTitle>
           <DialogContent
             sx={{
@@ -619,7 +626,11 @@ const ReacodringView = () => {
             <Typography>Are you sure you want to delete this note?</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDeleteDialog} color="secondary">
+            <Button
+              onClick={handleCloseDeleteDialog}
+              color="secondary"
+              variant="contained"
+            >
               Cancel
             </Button>
             <Button
@@ -664,14 +675,16 @@ const ReacodringView = () => {
             <Button
               onClick={handleCloseShowEraseConfirmation}
               color="secondary"
-              sx={{ border: "2px solid gray" }}
+              variant="contained"
+              // sx={{ border: "2px solid gray" }}
             >
               {!correctedTranscript ? "Erase" : "Yes"}
             </Button>
             <Button
               onClick={handleKeepRecording}
               color="primary"
-              sx={{ border: "2px solid gray" }}
+              variant="contained"
+              // sx={{ border: "2px solid gray" }}
               autoFocus
             >
               {!correctedTranscript ? "Keep Recording" : "No"}

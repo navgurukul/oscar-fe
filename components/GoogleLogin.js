@@ -72,7 +72,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
                 sx={{ mt: 2, paddingInline: 5 }}
               >
                 <Image
-                  src="/images/Google Logo.png"
+                  src="/images/Google Logo.svg"
                   alt="Google Logo"
                   width={20}
                   height={20}

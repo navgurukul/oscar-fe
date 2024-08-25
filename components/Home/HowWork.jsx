@@ -16,7 +16,7 @@ const HowWork = () => {
           <Box sx={{ p: 2, textAlign: "center" }}>
           <Box style={{boxShadow:"0px 0px 2px 0px #B9D9D7", padding:"20px" , borderRadius:"5px"}}>
             <Image
-              src="/images/Frame (1).png"
+              src="/images/Group.svg"
               alt="Get it on Google Play"
               width={150}
               height={150}
@@ -32,7 +32,7 @@ const HowWork = () => {
           <Box sx={{ p: 2, textAlign: "center" }}>
             <Box style={{boxShadow:"0px 0px 2px 0px #B9D9D7", padding:"20px",  borderRadius:"5px"}}>
             <Image
-              src="/images/Frame.png"
+              src="/images/Frame(2).svg"
               alt="Get it on Google Play"
               width={150}
               height={150}
@@ -50,7 +50,7 @@ const HowWork = () => {
           <Box sx={{ p: 2, textAlign: "center" }}>
           <Box style={{boxShadow:"0px 0px 4px 0px #B9D9D7", padding:"20px", borderRadius:"5px"}}>
             <Image
-              src="/images/Frame (2).png"
+              src="/images/Frame (1).svg"
               alt="Get it on Google Play"
               width={150}
               height={150}

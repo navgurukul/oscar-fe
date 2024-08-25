@@ -14,7 +14,7 @@ const Header = () => {
       }}
     >
       <Image
-        src="/images/Oscar Logo png-1.png"
+        src="/images/Oscar Logo with Text.svg"
         alt="Oscar Logo"
         width={100}
         height={100}

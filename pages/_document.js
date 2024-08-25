@@ -7,7 +7,7 @@ export default function Document() {
       <title>Oscar</title>
         <meta name="description" content="Created by samyarth" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/images/Oscar Logo png-1.png" />
+        <link rel="icon" href="/images/Oscar Logo with Text.svg" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Spectral:400,700&display=swap"

@@ -69,7 +69,7 @@ const LoginSection = () => {
           onClick={handleClickOpen}
         >
           <Image
-            src="/images/Google Logo.png"
+            src="/images/Google Logo.svg"
             alt="Get it on Google Play"
             width={25}
             height={25}

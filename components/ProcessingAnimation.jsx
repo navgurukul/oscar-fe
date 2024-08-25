@@ -36,7 +36,7 @@ const VideoLoader = ({ time }) => {
         Almost done...
       </Typography>
       <Image
-        src="/images/NewFrame.png"
+        src="/images/Frame.svg"
         width={100}
         height={100}
         alt="Processing Image"

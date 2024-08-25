@@ -8,6 +8,7 @@ import Image from "next/image";
 import styles from "../styles/Navbar.module.css";
 import ProfileDialog from "./ProfileDialog";
 import { Box } from "@mui/system";
+import Link from "next/link";
 
 const Navbar = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -32,12 +33,14 @@ const Navbar = () => {
     <Box position="static" className={styles.navbar}>
       <Toolbar className={styles.toolbar}>
         <Box display="flex" alignItems="center">
-          <Image
-            src="/images/Oscar Logo png-1.png"
-            alt="Oscar Logo"
-            width={50} 
-            height={50} 
-          />
+          <Link href="https://oscar.samyarth.org" passHref>
+            <Image
+              src="/images/Oscar Logo with Text.svg"
+              alt="Oscar Logo"
+              width={60}
+              height={60}
+            />
+          </Link>
           {/* <Typography variant="h4" color="#51A09B" className={styles.title}>
             Oscar
           </Typography> */}
@@ -45,7 +48,10 @@ const Navbar = () => {
         <Typography variant="h6" component="div">
           <IconButton onClick={handleOpenDialog}>
             {userDetails ? (
-              <Avatar alt={userDetails.firstName} src={userDetails.profilePicUrl} />
+              <Avatar
+                alt={userDetails.firstName}
+                src={userDetails.profilePicUrl}
+              />
             ) : (
               <Button className={styles.navButton}>Profile</Button>
             )}
@@ -58,4 +64,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

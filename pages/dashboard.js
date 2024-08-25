@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Snackbar, Alert } from "@mui/material";
 import withAuth from '../components/WithAuth';
-import Audio from '../components/ReacodringView';
+import ReacodringView from '../components/ReacodringView';
 import { useRouter } from "next/router";
 
 const Dashboard = () => {
@@ -22,7 +22,7 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <Audio />
+      <ReacodringView />
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000} // 3 seconds

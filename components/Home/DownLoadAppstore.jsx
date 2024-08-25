@@ -19,7 +19,7 @@ const DownLoadAppstore = () => {
           Try transcription on the go with the Oscar App
         </Typography>
         <Image
-          src="/images/Google Play.png"
+          src="/images/Google Play.svg"
           alt="Get it on Google Play"
           width={200}
           height={60}
