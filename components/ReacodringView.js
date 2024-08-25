@@ -8,6 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
@@ -46,6 +48,8 @@ const ReacodringView = () => {
     delete: "Delete note",
     restart: "Restart recording",
   });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -263,6 +267,8 @@ const ReacodringView = () => {
     if (savedNote) {
       setNotes((prevNotes) => [...prevNotes, savedNote]);
       fetchTranscriptions(); // Fetch the updated list of notes
+      setSnackbarMessage("Note saved successfully!");
+      setSnackbarOpen(true); // Show Snackbar
     }
     setCorrectedTranscript("");
     setIsDialogOpen(false);
@@ -298,6 +304,8 @@ const ReacodringView = () => {
       if (notes.length === 1) {
         setIsTransAvbl(false);
       }
+      setSnackbarMessage("Note deleted successfully!");
+      setSnackbarOpen(true); // Show Snackbar
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -365,6 +373,11 @@ const ReacodringView = () => {
     setTimeout(() => {
       handleStartRecording(); // Start the recording process immediately
     }, 100);
+  };
+
+  // Function to close the Snackbar
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -506,9 +519,7 @@ const ReacodringView = () => {
           >
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && transcript && "Your transcript is ready!"}
-            {correctedTranscript &&
-              !transcript &&
-              "Please Provide Text"}
+            {correctedTranscript && !transcript && "Please Provide Text"}
           </DialogTitle>
           <DialogContent
             sx={{
@@ -691,6 +702,17 @@ const ReacodringView = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        {/* Snackbar component */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        >
+          <Alert onClose={handleCloseSnackbar} severity="success">
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   );
