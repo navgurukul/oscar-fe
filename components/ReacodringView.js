@@ -25,8 +25,13 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Image from "next/image";
 import AudioHeader from "./AudioHeader";
 import Tooltip from "@mui/material/Tooltip";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ReacodringView = () => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // Mobile
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("sm", "md")); // Tablets
   const [isTransAvbl, setIsTransAvbl] = useState(true);
   const [notes, setNotes] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -506,8 +511,8 @@ const ReacodringView = () => {
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
               // height: !isRecord ? "600px" : "auto",
-              height: "500px",
-              width: "1000px",
+              height: isSmallScreen ? "auto" : "500px", // Adjust height for small screens
+              width: isSmallScreen ? "90vw" : "1000px", // Responsive width
             },
             display: "flex",
             justifyContent: "center",
@@ -555,13 +560,13 @@ const ReacodringView = () => {
             )}
           </DialogContent>
           <DialogActions
-            sx={{ display: "flex", justifyContent: "center", gap: "60px" }}
+            sx={{ display: "flex", justifyContent: "center", gap: isSmallScreen ? '30px' : '60px', }}
           >
             {!correctedTranscript && isRecord && (
               <IconButton
                 onClick={handleCloseDialog}
                 color="secondary"
-                sx={{ padding: "12px", backgroundColor: "#51a09b" }}
+                sx={{ padding: isSmallScreen ? '8px' : '12px', backgroundColor: "#51a09b" }}
               >
                 <RestartAltIcon sx={{ color: "#fff" }} />
               </IconButton>
@@ -615,7 +620,7 @@ const ReacodringView = () => {
               <IconButton
                 onClick={handleStopRecording}
                 color="primary"
-                sx={{ padding: "12px", backgroundColor: "#51a09b" }}
+                sx={{ padding: isSmallScreen ? '8px' : '12px', backgroundColor: "#51a09b" }}
               >
                 <StopIcon sx={{ color: "#fff" }} />
               </IconButton>
