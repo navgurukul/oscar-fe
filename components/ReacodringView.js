@@ -27,6 +27,10 @@ import AudioHeader from "./AudioHeader";
 import Tooltip from "@mui/material/Tooltip";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
+
 
 const ReacodringView = () => {
   const theme = useTheme();
@@ -36,7 +40,7 @@ const ReacodringView = () => {
   const [notes, setNotes] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isRecord, setIsRecord] = useState(false);
-  const [transcript, setTranscript] = useState("");
+  // const [transcript, setTranscript] = useState("");
   const [correctedTranscript, setCorrectedTranscript] = useState("");
   const [timer, setTimer] = useState(3 * 60); // 3 minutes in seconds
   const recognitionRef = useRef(null);
@@ -56,7 +60,34 @@ const ReacodringView = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+
+    // Function to detect if the device is Android
+    const isAndroidDevice = () => {
+      return /Android/i.test(navigator.userAgent);
+    };
+  
+    // Debugging: log the browserSupportsSpeechRecognition value and user agent
+    console.log("Browser Supports Speech Recognition:", browserSupportsSpeechRecognition);
+    console.log("User Agent:", navigator.userAgent);
+  
+    // Check if the Web Speech API is supported and if it's an Android device
+    if (isAndroidDevice()) {
+      if (!browserSupportsSpeechRecognition) {
+        alert("Your Android device's browser doesn't support speech recognition. Please try using Chrome or Firefox.");
+      } else {
+        alert("Speech recognition is working on your Android device.");
+      }
+    }
+
 
   const handleToggleRecordingDialog = async () => {
     try {
@@ -84,14 +115,46 @@ const ReacodringView = () => {
     clearInterval(timerRef.current);
   };
 
+  // const handleResetRecording = () => {
+  //   setIsLoading(false); // Ensure the loading state is reset
+  //   setIsRecord(false);
+  //   setTranscript("");
+  //   setCorrectedTranscript("");
+  //   if (recognitionRef.current) {
+  //     recognitionRef.current.stop();
+  //   }
+  //   clearInterval(timerRef.current);
+  //   setTimer(3 * 60); // Reset timer to 3 minutes
+  //   setIsResetDialogOpen(false); // Close the reset confirmation dialog
+  //   setShowEraseConfirmation(false);
+  //   setTimeout(() => {
+  //     setIsDialogOpen(true); // Reopen the recording dialog
+  //     handleStartRecording(); // Start the recording process immediately
+  //   }, 100); // Small delay to ensure the dialog closes and reopens correctly
+  // };
+
+  // const handleResetRecordingLast = () => {
+  //   setIsLoading(false); // Ensure the loading state is reset
+  //   setIsRecord(false);
+  //   // setTranscript("");
+  //   // setCorrectedTranscript("");
+  //   if (recognitionRef.current) {
+  //     recognitionRef.current.stop();
+  //   }
+  //   clearInterval(timerRef.current);
+  //   setTimer(3 * 60); // Reset timer to 3 minutes
+  //   setIsDialogOpen(false); // Close the current dialog
+  //   setTimeout(() => {
+  //     setIsDialogOpen(true); // Reopen the dialog to start recording again
+  //     // handleStartRecording(); // Start the recording process immediately
+  //   }, 100); // Small delay to ensure the dialog closes and reopens correctly
+  // };
+
+
   const handleResetRecording = () => {
     setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
-    setTranscript("");
-    setCorrectedTranscript("");
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-    }
+    resetTranscript();
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
     setIsResetDialogOpen(false); // Close the reset confirmation dialog
@@ -105,53 +168,70 @@ const ReacodringView = () => {
   const handleResetRecordingLast = () => {
     setIsLoading(false); // Ensure the loading state is reset
     setIsRecord(false);
-    // setTranscript("");
-    // setCorrectedTranscript("");
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-    }
+    SpeechRecognition.stopListening(); // Stop the speech recognition
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
     setIsDialogOpen(false); // Close the current dialog
     setTimeout(() => {
       setIsDialogOpen(true); // Reopen the dialog to start recording again
+      // Optionally, you could start recording here if needed
       // handleStartRecording(); // Start the recording process immediately
     }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
+  
+
+  // const handleStartRecording = async () => {
+  //   try {
+  //     // Check microphone permission
+  //     await navigator.mediaDevices.getUserMedia({ audio: true });
+
+  //     // Proceed with recording if permission is granted
+  //     localStorage.setItem("finalText", "");
+  //     setTranscript("");
+  //     setCorrectedTranscript("");
+  //     setIsRecord(true);
+  //     recognitionRef.current = new window.webkitSpeechRecognition();
+  //     recognitionRef.current.continuous = true;
+  //     recognitionRef.current.interimResults = true;
+
+  //     let finalTranscript = "";
+
+  //     recognitionRef.current.onresult = (event) => {
+  //       let interimTranscript = "";
+  //       for (let i = event.resultIndex; i < event.results.length; i++) {
+  //         const result = event.results[i];
+  //         if (result.isFinal) {
+  //           finalTranscript += result[0].transcript + " ";
+  //         } else {
+  //           interimTranscript += result[0].transcript + " ";
+  //         }
+  //       }
+  //       setTranscript(finalTranscript + interimTranscript.trim());
+  //       localStorage.setItem(
+  //         "finalText",
+  //         finalTranscript + interimTranscript.trim()
+  //       );
+  //     };
+  //     recognitionRef.current.start();
+  //     startTimer();
+  //   } catch (error) {
+  //     // Show an alert if microphone permission is denied
+  //     alert(
+  //       "Microphone permission is disabled. Please enable it in your browser settings to start recording."
+  //     );
+  //   }
+  // };
 
   const handleStartRecording = async () => {
     try {
       // Check microphone permission
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-
+      // await navigator.mediaDevices.getUserMedia({ audio: true });
+  
       // Proceed with recording if permission is granted
       localStorage.setItem("finalText", "");
-      setTranscript("");
-      setCorrectedTranscript("");
+      resetTranscript();
       setIsRecord(true);
-      recognitionRef.current = new window.webkitSpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-
-      let finalTranscript = "";
-
-      recognitionRef.current.onresult = (event) => {
-        let interimTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (result.isFinal) {
-            finalTranscript += result[0].transcript + " ";
-          } else {
-            interimTranscript += result[0].transcript + " ";
-          }
-        }
-        setTranscript(finalTranscript + interimTranscript.trim());
-        localStorage.setItem(
-          "finalText",
-          finalTranscript + interimTranscript.trim()
-        );
-      };
-      recognitionRef.current.start();
+      SpeechRecognition.startListening({ continuous: true });
       startTimer();
     } catch (error) {
       // Show an alert if microphone permission is denied
@@ -160,6 +240,7 @@ const ReacodringView = () => {
       );
     }
   };
+
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
@@ -176,19 +257,30 @@ const ReacodringView = () => {
     }, 1000);
   };
 
+  // const handleStopRecording = () => {
+  //   const value = localStorage.getItem("finalText");
+  //   if (recognitionRef.current) {
+  //     recognitionRef.current.stop();
+  //     setIsRecord(false);
+  //     // console.log("Recorded text:", transcript);
+  //     setIsLoading(true);
+  //     // run(transcript);
+  //     run(value);
+  //   }
+  //   clearInterval(timerRef.current);
+  //   setTimer(3 * 60); // Reset timer to 3 minutes
+  // };
+
+
   const handleStopRecording = () => {
-    const value = localStorage.getItem("finalText");
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsRecord(false);
-      // console.log("Recorded text:", transcript);
-      setIsLoading(true);
-      // run(transcript);
-      run(value);
-    }
+    SpeechRecognition.stopListening();
+    setIsRecord(false);
+    setIsLoading(true);
+    run(transcript);
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
   };
+  
 
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
@@ -370,7 +462,7 @@ const ReacodringView = () => {
   const handleCloseShowEraseConfirmation = () => {
     setShowEraseConfirmation(false);
     setIsDialogOpen(false);
-    setTranscript("");
+    // setTranscript("");
     setCorrectedTranscript("");
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
@@ -393,7 +485,7 @@ const ReacodringView = () => {
         backgroundColor: notes.length > 0 ? "#fff" : "#EEF6F5",
       }}
     >
-      <AudioHeader notes={notes} />
+      {/* <AudioHeader notes={notes} /> */}
       <Box className={styles.container}>
         <Box className={styles.box}>
           <Typography variant="h5" mb={2} fontWeight={700} color={"#51A09B"}>
@@ -546,7 +638,10 @@ const ReacodringView = () => {
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
                   {isRecord ? (
+                    <>
                     <ReacodringLoader />
+                    {transcript}
+                    </>
                   ) : (
                     <ProcessingAnimation time={timer} />
                   )}

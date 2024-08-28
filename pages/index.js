@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import HomePage from "@/components/Home/HomePage";
 import { Box } from "@mui/material";
+import ReacodringView from "@/components/ReacodringView";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,8 @@ const Home = () => {
 
   return (
     <Box>
-      <HomePage />
+      {/* <HomePage /> */}
+      <ReacodringView/>
     </Box>
   );
 };
