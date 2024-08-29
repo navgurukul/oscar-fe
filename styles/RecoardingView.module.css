@@ -167,6 +167,8 @@
   height:"15px";
   position: relative;
   bottom:-10px;
+  padding-inline: 4px;
+  margin-left:4px;
 }
 
 /* Media Queries for Responsiveness */

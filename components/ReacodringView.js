@@ -423,11 +423,11 @@ const ReacodringView = () => {
                   <Box className={styles.actions}>
                     <Tooltip title={tooltipTexts.copy}>
                       <IconButton
-                        edge="end"
+                        edge="start"
                         aria-label="copy"
                         onClick={() => handleCopyNote(note.transcribedText)}
                       >
-                        <ContentCopyIcon fontSize="small" />
+                        <ContentCopyIcon sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"20px"}} />
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title={tooltipTexts.download}>
@@ -445,7 +445,7 @@ const ReacodringView = () => {
                         aria-label="delete"
                         onClick={() => handleDeleteNote(note.id)}
                       >
-                        <DeleteOutlineIcon fontSize="small" />
+                        <DeleteOutlineIcon  sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"23px" }}/>
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -483,7 +483,7 @@ const ReacodringView = () => {
 
           <Typography fontWeight={700} fontSize="18px" zIndex={1000}>
             {notes.length > 0 ? (
-              "Transcribe your thoughts with a click"
+            "Transcribe your thoughts with a click"
             ) : (
               <Typography
                 variant="h6"
@@ -560,13 +560,20 @@ const ReacodringView = () => {
             )}
           </DialogContent>
           <DialogActions
-            sx={{ display: "flex", justifyContent: "center", gap: isSmallScreen ? '30px' : '60px', }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: isSmallScreen ? "30px" : "60px",
+            }}
           >
             {!correctedTranscript && isRecord && (
               <IconButton
                 onClick={handleCloseDialog}
                 color="secondary"
-                sx={{ padding: isSmallScreen ? '8px' : '12px', backgroundColor: "#51a09b" }}
+                sx={{
+                  padding: isSmallScreen ? "8px" : "12px",
+                  backgroundColor: "#51a09b",
+                }}
               >
                 <RestartAltIcon sx={{ color: "#fff" }} />
               </IconButton>
@@ -620,7 +627,10 @@ const ReacodringView = () => {
               <IconButton
                 onClick={handleStopRecording}
                 color="primary"
-                sx={{ padding: isSmallScreen ? '8px' : '12px', backgroundColor: "#51a09b" }}
+                sx={{
+                  padding: isSmallScreen ? "8px" : "12px",
+                  backgroundColor: "#51a09b",
+                }}
               >
                 <StopIcon sx={{ color: "#fff" }} />
               </IconButton>
