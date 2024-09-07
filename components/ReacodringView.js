@@ -70,23 +70,6 @@ const ReacodringView = () => {
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
-    // Function to detect if the device is Android
-    const isAndroidDevice = () => {
-      return /Android/i.test(navigator.userAgent);
-    };
-  
-    // Debugging: log the browserSupportsSpeechRecognition value and user agent
-    console.log("Browser Supports Speech Recognition:", browserSupportsSpeechRecognition);
-    console.log("User Agent:", navigator.userAgent);
-  
-    // Check if the Web Speech API is supported and if it's an Android device
-    if (isAndroidDevice()) {
-      if (!browserSupportsSpeechRecognition) {
-        alert("Your Android device's browser doesn't support speech recognition. Please try using Chrome or Firefox.");
-      } else {
-        alert("Speech recognition is working on your Android device.");
-      }
-    }
 
 
   const handleToggleRecordingDialog = async () => {
@@ -240,6 +223,13 @@ const ReacodringView = () => {
       );
     }
   };
+
+  useEffect(() => {
+    if(listening) {
+      console.log("Listening:", listening);
+      console.log("Transcript:", transcript);
+    }
+  }, [listening, transcript]);
 
 
   const startTimer = () => {
