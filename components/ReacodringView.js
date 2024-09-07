@@ -55,6 +55,9 @@ const ReacodringView = () => {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [audioURL, setAudioURL] = useState("");
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -122,7 +125,25 @@ const ReacodringView = () => {
   const handleStartRecording = async () => {
     try {
       // Check microphone permission
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      // await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setAudioURL(audioUrl);
+        audioChunksRef.current = [];
+      };
+
+      mediaRecorderRef.current.start();
 
       // Proceed with recording if permission is granted
       localStorage.setItem("finalText", "");
@@ -186,6 +207,30 @@ const ReacodringView = () => {
       // run(transcript);
       run(value);
     }
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+
+      mediaRecorderRef.current.onstop = () => {
+        // Combine audio chunks and create a Blob
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // Create a downloadable link and trigger the download
+        const downloadLink = document.createElement("a");
+        downloadLink.href = audioUrl;
+        downloadLink.download = "recording.wav";
+        downloadLink.style.display = "none"; // Hide the link
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        // Clear audio chunks after download
+        audioChunksRef.current = [];
+      };
+    }
+
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
   };
@@ -427,7 +472,13 @@ const ReacodringView = () => {
                         aria-label="copy"
                         onClick={() => handleCopyNote(note.transcribedText)}
                       >
-                        <ContentCopyIcon sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"20px"}} />
+                        <ContentCopyIcon
+                          sx={{
+                            color: "color-code",
+                            "&:hover": { color: "color-code" },
+                            fontSize: "20px",
+                          }}
+                        />
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title={tooltipTexts.download}>
@@ -445,7 +496,13 @@ const ReacodringView = () => {
                         aria-label="delete"
                         onClick={() => handleDeleteNote(note.id)}
                       >
-                        <DeleteOutlineIcon  sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"23px" }}/>
+                        <DeleteOutlineIcon
+                          sx={{
+                            color: "color-code",
+                            "&:hover": { color: "color-code" },
+                            fontSize: "23px",
+                          }}
+                        />
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -483,7 +540,7 @@ const ReacodringView = () => {
 
           <Typography fontWeight={700} fontSize="18px" zIndex={1000}>
             {notes.length > 0 ? (
-            "Transcribe your thoughts with a click"
+              "Transcribe your thoughts with a click"
             ) : (
               <Typography
                 variant="h6"
