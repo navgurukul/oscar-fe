@@ -26,85 +26,68 @@ const LoginSection = () => {
   return (
     <Box
       sx={{
-        // height: "90vh",
         display: "flex",
         flexDirection: "column",
-        gap: isSmallScreen ? "1rem" : "2.5rem",
-        // paddingInline: isSmallScreen ? "2rem" : isMediumScreen ? "2rem": "0rem",
-        // alignItems: "center",
+        alignItems: "center",
+        padding: "80px 0",
+        // gap: isSmallScreen ? "1rem" : "2.5rem",
       }}
     >
-      <Box>
-        <Typography
-          // variant={isSmallScreen ? "h4" : isMediumScreen ? "h4" : "h3"}
-          variant="h3"
-          align="center"
-          fontSize={isSmallScreen ? 40 : isMediumScreen ? 55 : 70}
-          fontWeight={600}
-          pt={isSmallScreen ? 2 : 6}
-          gutterBottom
-        >
-          Speak it
-          <span style={{ color: "#51A09B" }}>.</span> See it
-          <span style={{ color: "#51A09B" }}>.</span> Save it or Share it
-          <span style={{ color: "#51A09B" }}>.</span>
-        </Typography>
-        <Typography
-          // variant={isSmallScreen ? "h4" : isMediumScreen ? "h4" : "h3"}
-           variant="h3"
-          align="center"
-          fontSize={isSmallScreen ? 40 : isMediumScreen ? 55 : 70}
-          fontWeight={600}
-          color="#51A09B"
-        >
-          Effortlessly<span style={{ color: "#51A09B" }}>.</span>
-        </Typography>
-      </Box>
-      <Box
+      <Box align="center">
+        <Box 
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: isSmallScreen ? "5px" : "10px",
         }}
-      >
-        <Typography
-          // variant={isSmallScreen ? "h6" : "h5"}
-           variant="h5"
-          textAlign="center"
-          fontWeight="bold"
         >
-          Speak and watch your ideas seamlessly flow into polished text.
-        </Typography>
-        <Typography
-          // variant={isSmallScreen ? "h6" : "h5"}
-           variant="h5"
-          textAlign="center"
-          fontWeight="lighter"
-          // fontFamily="Karla"
-          // mt={0}
+          <Typography
+            // variant={isSmallScreen ? "h4" : isMediumScreen ? "h4" : "h3"}
+            variant="h3"
+            // fontSize={isSmallScreen ? 40 : isMediumScreen ? 55 : 70}
+            // pt={isSmallScreen ? 2 : 6}
+          >
+            Speak it
+            <span style={{ color: "#51A09B" }}>.</span> See it
+            <span style={{ color: "#51A09B" }}>.</span> Save it or Share it
+            <span style={{ color: "#51A09B" }}>.</span>
+            {/* Effortlessly<span style={{ color: "#51A09B" }}>.</span> */}
+          </Typography>
+          <Typography
+            // variant={isSmallScreen ? "h4" : isMediumScreen ? "h4" : "h3"}
+            variant="h3"
+            // fontSize={isSmallScreen ? 40 : isMediumScreen ? 55 : 70}
+            color="#51A09B"
+          >
+            Effortlessly<span style={{ color: "#51A09B" }}>.</span>
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            pt:"32px"
+            // gap: isSmallScreen ? "5px" : "10px",
+          }}
         >
-          Whether it's notes, emails, or articles, all you need to do is Speak.
-        </Typography>
-        <Typography
-          variant="h5"
-          // variant={isSmallScreen ? "h6" : "h5"}
-          textAlign="center"
-          fontWeight="lighter"
-          // mt={0}
-        >
-          We'll handle the rest.
-        </Typography>
+          <Typography variant="h6">
+            Speak and watch your ideas seamlessly flow into polished text
+          </Typography>
+          <Typography variant="body1">
+            Whether it's notes, emails, or articles, all you need to do is
+            Speak
+          </Typography>
+          <Typography variant="body1">We'll handle the rest</Typography>
+        </Box>
       </Box>
 
-      <Grid container justifyContent="center">
+      <Box>
         <Button
           variant="contained"
           color="primary"
           sx={{
             paddingInline: isSmallScreen ? 3 : 5,
-            paddingBlock: 1,
-            // mt: isSmallScreen ? 2 : 5,
-            mt:5
+            // paddingBlock: 1,
+            mt: 3.5,
           }}
           onClick={handleClickOpen}
         >
@@ -117,7 +100,7 @@ const LoginSection = () => {
           />
           Log in with Google
         </Button>
-      </Grid>
+      </Box>
 
       <GoogleLoginComponent open={dialogOpen} onClose={handleClose} />
     </Box>

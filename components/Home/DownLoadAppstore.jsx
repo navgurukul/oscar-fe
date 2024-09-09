@@ -4,35 +4,30 @@ import Image from "next/image";
 
 const DownLoadAppstore = () => {
   return (
-    <Grid justifyContent="center" sx={{ backgroundColor: "#B9D9D7" }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          paddingBlock: "8px",
-          mt:4
-        }}
-      >
-        <Typography variant="h6" fontWeight={700} textAlign="center">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "48px 0",
+        gap: "32px",
+        backgroundColor: "#B9D9D7",
+      }}
+    >
+      <Box>
+        <Typography variant="h5" textAlign="center">
           Try transcription on the go with the Oscar App
         </Typography>
-        <Image
+      </Box>
+      <Box>
+      <Image
           src="/images/Google Play.svg"
           alt="Get it on Google Play"
           width={200}
           height={60}
-          style={{
-            width: "100%",
-            height: "auto",
-            maxWidth: "150px",
-            border: "none",
-            paddingBottom:"8px"
-          }}
         />
       </Box>
-    </Grid>
+    </Box>
   );
 };
 
