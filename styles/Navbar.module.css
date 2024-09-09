@@ -1,11 +1,13 @@
 .navbar {
     background-color: transparent; /* Transparent background */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); 
+    /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);  */
   }
   
   .toolbar {
     display: flex;
     justify-content: space-between;
+    padding: 1rem 2rem;
+    align-items: center;
   }
   
   .navbarNav {

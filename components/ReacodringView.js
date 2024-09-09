@@ -55,6 +55,8 @@ const ReacodringView = () => {
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedNoteOpen, setSelectedNoteOpen] = useState(false);
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -309,6 +311,7 @@ const ReacodringView = () => {
       if (notes.length === 1) {
         setIsTransAvbl(false);
       }
+      setSelectedNoteOpen(false);
       setSnackbarMessage("Note deleted successfully!");
       setSnackbarOpen(true); // Show Snackbar
     } catch (error) {
@@ -385,18 +388,32 @@ const ReacodringView = () => {
     setSnackbarOpen(false);
   };
 
+  // Function to open the dialog with the selected note
+  const handleNoteClick = (note) => {
+    setSelectedNote(note);
+    setSelectedNoteOpen(true);
+  };
+
+  // Function to close the dialog
+  const handleClose = () => {
+    setSelectedNoteOpen(false);
+    setSelectedNote(null);
+  };
   return (
     <Box
       style={{
         margin: 0,
-        minHeight: "100vh",
+        // minHeight: "100vh",
+        height: "100vh",
         backgroundColor: notes.length > 0 ? "#fff" : "#EEF6F5",
       }}
     >
       <AudioHeader notes={notes} />
-      <Box className={styles.container}>
+      <Box
+        className={notes.length > 0 ? styles.container : styles.containerEmpty}
+      >
         <Box className={styles.box}>
-          <Typography variant="h5" mb={2} fontWeight={700} color={"#51A09B"}>
+          <Typography variant="h6" color={"#4D4D4D"} pb={4}>
             My Transcripts ({notes.length})
           </Typography>
           {!notes.length > 0 ? (
@@ -406,48 +423,32 @@ const ReacodringView = () => {
                 alt="Get it on Google Play"
                 width={100}
                 height={100}
+                style={{
+    maxWidth: "100%",  // Allows the image to scale within its container
+    height: "auto",    // Maintains the aspect ratio
+  }}
               />
-              <Typography variant="h6" align="center" color={"#4D4D4D"}>
+              <Typography
+                variant="subtitle1"
+                color={"#4D4D4D"}
+                align="center"
+                pt={2}
+              >
                 We are excited to see what your first transcription will be
               </Typography>
             </Box>
           ) : (
-            <Box className={styles.notesBox}>
+            <Box className={styles.notesContainer}>
               {notes.map((note, index) => (
-                <Box key={index} className={styles.noteBox}>
-                  <Box className={styles.noteContent}>
+                <Box
+                  key={index}
+                  className={styles.noteCard}
+                  onClick={() => handleNoteClick(note)}
+                >
+                  <Box className={styles.noteTextContainer}>
                     <Typography variant="body2" className={styles.noteText}>
                       {note.transcribedText}
                     </Typography>
-                  </Box>
-                  <Box className={styles.actions}>
-                    <Tooltip title={tooltipTexts.copy}>
-                      <IconButton
-                        edge="start"
-                        aria-label="copy"
-                        onClick={() => handleCopyNote(note.transcribedText)}
-                      >
-                        <ContentCopyIcon sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"20px"}} />
-                      </IconButton>
-                    </Tooltip>
-                    {/* <Tooltip title={tooltipTexts.download}>
-                      <IconButton
-                        edge="end"
-                        aria-label="download"
-                        onClick={() => handleDownloadNote(note.transcribedText)}
-                      >
-                        <DownloadIcon />
-                      </IconButton>
-                    </Tooltip> */}
-                    <Tooltip title={tooltipTexts.delete}>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => handleDeleteNote(note.id)}
-                      >
-                        <DeleteOutlineIcon  sx={{ color: 'color-code', '&:hover': { color: 'color-code' },fontSize:"23px" }}/>
-                      </IconButton>
-                    </Tooltip>
                   </Box>
                 </Box>
               ))}
@@ -460,11 +461,18 @@ const ReacodringView = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            position: notes.length > 0 ? "fixed" : "static", // Adjust position
-            bottom: notes.length > 0 ? "20px" : "auto", // Place at bottom if notes are available
-            marginBottom: notes.length > 0 ? "0" : "20px", // Adjust margin bottom accordingly
+            position: notes.length > 0 ? "fixed" : "static",
+            bottom: notes.length > 0 ? "0px" : "auto",
+            backgroundColor: notes.length > 0 ? "#fff" : "#EEF6F5",
+            padding: notes.length > 0 ? "10px" : "0px",
+            textAlign: "center",
+            height: "auto",
+            width: "100%",
           }}
         >
+          <Typography variant="subtitle1" color="#4D4D4D" pb={2}>
+            {notes.length > 0 && "Transcribe your thoughts with a click"}
+          </Typography>
           <Box
             className={`${styles.micContainer}`}
             style={{ marginBottom: "10px" }}
@@ -475,22 +483,15 @@ const ReacodringView = () => {
                   sx={{ color: "#fff" }}
                   onClick={handleToggleRecordingDialog}
                 >
-                  <MicIcon sx={{ fontSize: "32px" }} />
+                  <MicIcon fontSize="large" />
                 </IconButton>
               </Box>
             </Box>
           </Box>
 
-          <Typography fontWeight={700} fontSize="18px" zIndex={1000}>
-            {notes.length > 0 ? (
-            "Transcribe your thoughts with a click"
-            ) : (
-              <Typography
-                variant="h6"
-                align="center"
-                fontWeight={700}
-                color={"#51A09B"}
-              >
+          <Typography>
+            {!notes.length > 0 && (
+              <Typography variant="body2" color={"#4D4D4D"}>
                 Tap the mic to start
               </Typography>
             )}
@@ -589,7 +590,7 @@ const ReacodringView = () => {
                 >
                   <Tooltip title={tooltipTexts.restart}>
                     <IconButton
-                      onClick={handleResetRecordingLast}
+                      onClick={handleResetRecording}
                       color="secondary"
                     >
                       <RestartAltIcon sx={{ color: "#51A09B" }} />
@@ -690,7 +691,7 @@ const ReacodringView = () => {
         </Dialog>
         <Dialog
           open={showEraseConfirmation}
-          onClose={handleCloseShowEraseConfirmation}
+          // onClose={handleCloseShowEraseConfirmation}
         >
           <DialogTitle>
             {!correctedTranscript
@@ -717,6 +718,74 @@ const ReacodringView = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        {/* Dialog to show selected note details */}
+        <Dialog
+          open={selectedNoteOpen}
+          onClose={handleClose}
+          fullWidth
+          // PaperProps={{
+          //   style: {
+          //     backgroundColor: "transparent",
+          //     boxShadow: "12px 12px 12px 12px #fff",
+          //   },
+          // }}
+          // BackdropProps={{
+          //   style: {
+          //     backgroundColor: "transparent",
+          //   },
+          // }}
+        >
+          <DialogContent>
+            {/* Container for both cards (Note card + Action card) */}
+            <Box className={styles.popupContainer}>
+              {/* Note content - full visibility */}
+              <Box className={styles.popupNoteCard}>
+                <Typography variant="body2">
+                  {selectedNote && selectedNote.transcribedText}
+                </Typography>
+              </Box>
+
+              {/* Action card with icons */}
+              <Box className={styles.popupActionCard}>
+                <Tooltip title="Copy">
+                  <IconButton
+                    className={styles.popupActionIcon}
+                    onClick={() => handleCopyNote(selectedNote.transcribedText)}
+                  >
+                    <ContentCopyIcon
+                      sx={{ color: "#51A09B", fontSize: "20px" }}
+                    />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Delete">
+                  <IconButton
+                    className={styles.popupActionIcon}
+                    onClick={() => handleDeleteNote(selectedNote.id)}
+                  >
+                    <DeleteOutlineIcon
+                      sx={{ color: "#51A09B", fontSize: "23px" }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+
+            {/* Separate Button below the cards */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                mt: 2,
+              }}
+            >
+              <Button variant="contained" onClick={handleClose}>
+                Go to Dashboard
+              </Button>
+            </Box>
+          </DialogContent>
+        </Dialog>
+
         {/* Snackbar component */}
         <Snackbar
           open={snackbarOpen}
