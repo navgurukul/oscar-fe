@@ -7,6 +7,18 @@
   padding-bottom: 16px;
   scroll-behavior: smooth;
   padding-inline: 200px;
+  height: 70%;
+  overflow-y: scroll;
+}
+
+.containerEmpty {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  padding-inline: 200px;
+  height: auto;
 }
 
 .box {
@@ -16,83 +28,48 @@
 }
 
 .transcriptBox {
-  margin-top: 100px;
+  padding-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  /* padding-bottom: 5px; */
+  /* gap:"2rem"; */
+
 }
 
-/* .notesBox {
+/* .notesContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     justify-content: center;
   } */
 
-.noteBox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  box-sizing: border-box;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  background-color: #b9d9d7;
-  overflow-y: auto;
-}
-
-.micContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 16px;
-  color: white;
-}
-
-.outerCircle {
-  background-color: #cae9eb;
-  border-radius: 50%;
-  padding: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.innerCircle {
-  background-color: #51a09b;
-  border-radius: 50%;
-  padding: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 /* Container for notes */
-.notesBox {
+.notesContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
 }
 
 /* Individual note box */
-.noteBox {
+.noteCard {
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
   padding: 8px;
-  width: calc(33.33% - 16px); /* Adjust width for how many notes per row */
-  box-sizing: border-box; /* Include padding and border in the element's total width */
+  border-radius: 0.5rem;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
+  background-color: #b9d9d7;
+  width: 24rem; 
   max-height: 150px;
-  overflow: hidden; /* Hide overflow content */
-  border: none;
-}
-
-/* Note content area */
-.noteContent {
-  flex: 1;
-  overflow: hidden;
+  overflow: hidden; 
+  position: relative;
+  min-height: 150px;
+  width: 24rem;
+  padding: 2rem;
+  align-items: flex-start;
 }
 
 /* Ensure text wraps properly and fits within the note box */
@@ -106,20 +83,9 @@
 .micContainerRecording {
   position: fixed;
   bottom: 0;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 
 /* .micContainer{
   position: fixed;
@@ -128,62 +94,106 @@
 } */
 
 .outerCircle {
-  background-color: hsl(189, 45%, 86%);
+  background-color: #cae9eb;
   border-radius: 50%;
-  padding: 30px;
+  padding: 5px;
 }
 
 .innerCircle {
   background-color: #51a09b;
   border-radius: 50%;
-  padding: 5px;
 }
 
 .recording {
   animation: pulse 1s infinite;
 }
 
-.noteBox {
-  display: flex;
-  align-items: center;
-  /* margin: 10px 0; */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  /* padding: 10px; */
-  position: relative;
+/* Note content area */
+.noteTextContainer {
+  flex: 1;
+  overflow: hidden;
+  /* max-height: 150px; Set a fixed height */
+  overflow-y: auto;
+  padding-right: 20px;
 }
 
-.noteContent {
-  max-height: 150px; /* Set a fixed height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  padding-right: 20px; /* To avoid text hiding behind the delete icon */
-}
-
-.actions {
+.noteActions {
   /* padding-top: 5px; */
   width: 100%;
   display: flex;
   justify-content: space-between;
-  height:"15px";
+  height: "15px";
   position: relative;
-  bottom:-10px;
+  bottom: -10px;
   padding-inline: 4px;
-  margin-left:4px;
+  margin-left: 4px;
 }
+
+
+/* Popup container for both note card and action card */
+.popupContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 16px; 
+  align-items: flex-start;
+}
+
+/* Note card - full content visible */
+.popupNoteCard {
+  flex-grow: 1;
+  padding: 16px;
+  background-color: #b9d9d7;
+  border-radius: 0.5rem;
+  max-width: 188rem; 
+  overflow: auto;
+  min-height: 200px;
+  height: auto; 
+}
+
+/* Action card - white background */
+.popupActionCard {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  align-items: center; 
+  justify-content: center;
+  max-width: 30%; 
+}
+
+/* Action buttons inside action card */
+/* .popupActionIcon {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  padding: 6px;
+  transition: background-color 0.3s;
+}
+
+.popupActionIcon:hover {
+  background-color: #e0e0e0;
+} */
+
+
 
 /* Media Queries for Responsiveness */
 
-/* For smaller screens, 768px and below */
-@media (max-width: 768px) {
+/* For smaller screens, 1024px and below */
+@media (max-width: 1024px) {
   .container {
     padding-inline: 20px;
+    /* height:65%; */
   }
-  .notesBox {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  .containerEmpty {
+    padding-inline: 20px;
+  }
+  .notesContainer {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .noteBox {
-    width: calc(50% - 16px); /* Adjust width for two columns */
+  .noteCard {
+    width: calc(50% - 16px);
   }
 }
 
@@ -191,12 +201,34 @@
 @media (max-width: 480px) {
   .container {
     padding-inline: 10px;
+    height: 60%;
   }
-  .notesBox {
-    grid-template-columns: 1fr; /* 1 column */
+  .containerEmpty {
+    padding-inline: 10px;
+  }
+  .notesContainer {
+    grid-template-columns: 1fr;
   }
 
-  .noteBox {
+  .noteCard {
     width: 100%; /* Full width */
   }
+  .noteTextContainer {
+    max-height: 100px;
+  }
 }
+
+/* For extra small screens, 320px and below */
+@media (max-width: 320px) {
+  .container {
+    padding-inline: 10px;
+    height: 40%;
+  }
+  .containerEmpty {
+    padding-inline: 10px;
+  }
+}
+
+
+
+
