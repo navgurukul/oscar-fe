@@ -6,8 +6,8 @@
   padding-top: 16px;
   padding-bottom: 16px;
   scroll-behavior: smooth;
-  padding-inline: 200px;
-  height: 70%;
+  padding-inline: 150px;
+  height: 65%;
   overflow-y: scroll;
 }
 
@@ -38,12 +38,12 @@
 
 }
 
-/* .notesContainer {
+.notesContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     justify-content: center;
-  } */
+  }
 
 /* Container for notes */
 .notesContainer {
@@ -62,14 +62,13 @@
   border-radius: 0.5rem;
   /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
   background-color: #b9d9d7;
-  width: 24rem; 
   max-height: 150px;
   overflow: hidden; 
   position: relative;
   min-height: 150px;
-  width: 24rem;
   padding: 2rem;
   align-items: flex-start;
+  width: calc(33.33% - 16px);
 }
 
 /* Ensure text wraps properly and fits within the note box */

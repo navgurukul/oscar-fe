@@ -20,36 +20,42 @@ const theme = createTheme({
       fontSize: '6rem',
       fontWeight: 600,
       lineHeight:"150%",
+      color:"#4D4D4D",
     },
     h2:{
       fontFamily:"Spectral, sans-serif",
       fontSize: '4.5rem',
       fontWeight: 600,
       lineHeight:"150%",
+      color:"#4D4D4D",
     },
     h3:{
       fontFamily:"Spectral, sans-serif",
       fontSize: '3.5rem',
       lineHeight:"150%",
       fontWeight:"bold",
+      color:"#4D4D4D",
     },
     h4: {
       fontSize: '2.625rem',
       fontWeight: "bold",
       fontFamily: 'Spectral, serif',
       lineHeight:"150%",
+      color:"#4D4D4D",
     },
     h5: {
       fontSize: '2rem',
       fontWeight: "bold",
       fontFamily:"Spectral, sans-serif",
       lineHeight:"150%",
+      color:"#4D4D4D",
     },
     h6: {
       fontSize: '1.5rem',
       fontWeight: "bold",
       fontFamily:"Spectral, sans-serif",
       lineHeight:"150%",
+      color:"#4D4D4D",
 
     },
     subtitle1: {

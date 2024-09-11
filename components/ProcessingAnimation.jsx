@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -45,7 +44,14 @@ const VideoLoader = ({ time }) => {
         <LinearProgress
           variant="determinate"
           value={progress}
-          sx={{ height: 10, borderRadius: 5 }}
+          sx={{
+            height: 15,
+            borderRadius: 5,
+            backgroundColor: "#fff",
+            "& .MuiLinearProgress-bar": {
+              borderRadius: 5,
+            },
+          }}
         />
       </Box>
       <Typography variant="body1" sx={{ color: "#4D4D4D" }}>
@@ -54,5 +60,4 @@ const VideoLoader = ({ time }) => {
     </Box>
   );
 };
-
 export default VideoLoader;
