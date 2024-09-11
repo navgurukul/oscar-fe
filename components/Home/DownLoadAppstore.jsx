@@ -23,8 +23,8 @@ const DownLoadAppstore = () => {
       <Image
           src="/images/Google Play.svg"
           alt="Get it on Google Play"
-          width={200}
-          height={60}
+          width={150}
+          height={55}
         />
       </Box>
     </Box>

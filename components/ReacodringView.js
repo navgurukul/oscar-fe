@@ -121,6 +121,7 @@ const ReacodringView = () => {
     }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
+
   const handleStartRecording = async () => {
     try {
       // Check microphone permission
@@ -375,12 +376,14 @@ const ReacodringView = () => {
     setIsDialogOpen(false);
     setTranscript("");
     setCorrectedTranscript("");
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecord(false);
+      setIsLoading(true);
+    }
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
 
-    setTimeout(() => {
-      handleStartRecording(); // Start the recording process immediately
-    }, 100);
   };
 
   // Function to close the Snackbar
@@ -413,7 +416,7 @@ const ReacodringView = () => {
         className={notes.length > 0 ? styles.container : styles.containerEmpty}
       >
         <Box className={styles.box}>
-          <Typography variant="h6" color={"#4D4D4D"} pb={4}>
+          <Typography variant="h6" color={"#4D4D4D"} pb={2} pl={1}>
             My Transcripts ({notes.length})
           </Typography>
           {!notes.length > 0 ? (
@@ -424,9 +427,9 @@ const ReacodringView = () => {
                 width={100}
                 height={100}
                 style={{
-    maxWidth: "100%",  // Allows the image to scale within its container
-    height: "auto",    // Maintains the aspect ratio
-  }}
+                  maxWidth: "100%", 
+                  height: "auto",
+                }}
               />
               <Typography
                 variant="subtitle1"
@@ -590,7 +593,7 @@ const ReacodringView = () => {
                 >
                   <Tooltip title={tooltipTexts.restart}>
                     <IconButton
-                      onClick={handleResetRecording}
+                      onClick={handleCloseDialog}
                       color="secondary"
                     >
                       <RestartAltIcon sx={{ color: "#51A09B" }} />
@@ -685,25 +688,25 @@ const ReacodringView = () => {
               Reset
             </Button>
             <Button onClick={handleKeepRecording} variant="contained">
-              Keep Recording
+              {!correctedTranscript && isRecord ? "Keep Recording" :"close"}
             </Button>
           </DialogActions>
         </Dialog>
         <Dialog
           open={showEraseConfirmation}
           // onClose={handleCloseShowEraseConfirmation}
+          sx={{ "& .MuiDialog-paper": { width:{xs:"500px"}, height: "auto" } }}
         >
           <DialogTitle>
             {!correctedTranscript
-              ? "Doing this action will erase the current audio recording. Do you still wish to continue?"
-              : "Doing this action will delete your transcript. Do you still wish to continue?"}
+              ? <Typography variant="body1">Doing this action will erase the current audio recording. Do you still wish to continue?</Typography>
+              : <Typography variant="body1">Doing this action will delete your transcript. Do you still wish to continue?</Typography>}
           </DialogTitle>
           <DialogActions>
             <Button
               onClick={handleCloseShowEraseConfirmation}
               color="secondary"
               variant="contained"
-              // sx={{ border: "2px solid gray" }}
             >
               {!correctedTranscript ? "Erase" : "Yes"}
             </Button>
@@ -711,7 +714,6 @@ const ReacodringView = () => {
               onClick={handleKeepRecording}
               color="primary"
               variant="contained"
-              // sx={{ border: "2px solid gray" }}
               autoFocus
             >
               {!correctedTranscript ? "Keep Recording" : "No"}
@@ -736,16 +738,12 @@ const ReacodringView = () => {
           // }}
         >
           <DialogContent>
-            {/* Container for both cards (Note card + Action card) */}
             <Box className={styles.popupContainer}>
-              {/* Note content - full visibility */}
               <Box className={styles.popupNoteCard}>
                 <Typography variant="body2">
                   {selectedNote && selectedNote.transcribedText}
                 </Typography>
               </Box>
-
-              {/* Action card with icons */}
               <Box className={styles.popupActionCard}>
                 <Tooltip title="Copy">
                   <IconButton
@@ -770,8 +768,6 @@ const ReacodringView = () => {
                 </Tooltip>
               </Box>
             </Box>
-
-            {/* Separate Button below the cards */}
             <Box
               sx={{
                 display: "flex",
