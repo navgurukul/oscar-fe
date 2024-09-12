@@ -52,11 +52,16 @@ const ReacodringView = () => {
     download: "Download note",
     delete: "Delete note",
     restart: "Restart recording",
+    recording:"Download the recording"
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
   const [selectedNoteOpen, setSelectedNoteOpen] = useState(false);
+  const [audioURL, setAudioURL] = useState("");
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -124,8 +129,27 @@ const ReacodringView = () => {
 
   const handleStartRecording = async () => {
     try {
+      handleTooltipChange("recording", "Download the recording");
       // Check microphone permission
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      // await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        setAudioURL(audioUrl);
+        audioChunksRef.current = [];
+      };
+
+      mediaRecorderRef.current.start();
 
       // Proceed with recording if permission is granted
       localStorage.setItem("finalText", "");
@@ -189,6 +213,10 @@ const ReacodringView = () => {
       // run(transcript);
       run(value);
     }
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
+
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
   };
@@ -623,6 +651,18 @@ const ReacodringView = () => {
                         </IconButton>
                       </Tooltip>
                     </>
+                  )}
+                   {audioURL && (
+                    <Tooltip title={tooltipTexts.recording}>
+                      <IconButton
+                        href={audioURL}
+                        download="recording.wav"
+                        sx={{ color: "#51A09B" }}
+                        onClick={()=>handleTooltipChange("recording","Recording downloaded.")} 
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                    </Tooltip>
                   )}
                 </Box>
               </>
