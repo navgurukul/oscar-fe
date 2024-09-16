@@ -121,9 +121,26 @@ const ReacodringView = () => {
     }, 100); // Small delay to ensure the dialog closes and reopens correctly
   };
 
+  function checkSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      alert("Your browser does not support speech recognition. Please use a supported browser like Chrome.");
+      setIsDialogOpen(false)
+      return false;
+    }
+  
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+    return true;
+  }
+
+  
 
   const handleStartRecording = async () => {
     try {
+      if (!checkSpeechRecognition()) return;
       // Check microphone permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -383,7 +400,6 @@ const ReacodringView = () => {
     }
     clearInterval(timerRef.current);
     setTimer(3 * 60); // Reset timer to 3 minutes
-
   };
 
   // Function to close the Snackbar
@@ -427,7 +443,7 @@ const ReacodringView = () => {
                 width={100}
                 height={100}
                 style={{
-                  maxWidth: "100%", 
+                  maxWidth: "100%",
                   height: "auto",
                 }}
               />
@@ -592,10 +608,7 @@ const ReacodringView = () => {
                   }}
                 >
                   <Tooltip title={tooltipTexts.restart}>
-                    <IconButton
-                      onClick={handleCloseDialog}
-                      color="secondary"
-                    >
+                    <IconButton onClick={handleCloseDialog} color="secondary">
                       <RestartAltIcon sx={{ color: "#51A09B" }} />
                     </IconButton>
                   </Tooltip>
@@ -688,19 +701,29 @@ const ReacodringView = () => {
               Reset
             </Button>
             <Button onClick={handleKeepRecording} variant="contained">
-              {!correctedTranscript && isRecord ? "Keep Recording" :"close"}
+              {!correctedTranscript && isRecord ? "Keep Recording" : "close"}
             </Button>
           </DialogActions>
         </Dialog>
         <Dialog
           open={showEraseConfirmation}
           // onClose={handleCloseShowEraseConfirmation}
-          sx={{ "& .MuiDialog-paper": { width:{xs:"500px"}, height: "auto" } }}
+          sx={{
+            "& .MuiDialog-paper": { width: { xs: "500px" }, height: "auto" },
+          }}
         >
           <DialogTitle>
-            {!correctedTranscript
-              ? <Typography variant="body1">Doing this action will erase the current audio recording. Do you still wish to continue?</Typography>
-              : <Typography variant="body1">Doing this action will delete your transcript. Do you still wish to continue?</Typography>}
+            {!correctedTranscript ? (
+              <Typography variant="body1">
+                Doing this action will erase the current audio recording. Do you
+                still wish to continue?
+              </Typography>
+            ) : (
+              <Typography variant="body1">
+                Doing this action will delete your transcript. Do you still wish
+                to continue?
+              </Typography>
+            )}
           </DialogTitle>
           <DialogActions>
             <Button
