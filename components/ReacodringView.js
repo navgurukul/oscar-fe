@@ -125,7 +125,7 @@ const ReacodringView = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (!SpeechRecognition) {
-      alert("Your browser does not support speech recognition. Please use a supported browser like Chrome.");
+      alert("This Browser does not support the Web Speech API, For Best Experience Switch to Crome or Edge");
       setIsDialogOpen(false)
       return false;
     }
