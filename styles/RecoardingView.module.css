@@ -58,16 +58,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 8px;
   border-radius: 0.5rem;
-  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
   background-color: #b9d9d7;
   max-height: 150px;
   overflow: hidden; 
   position: relative;
   min-height: 150px;
-  padding: 2rem;
-  align-items: flex-start;
+  padding: 1.6rem;
   width: calc(33.33% - 16px);
 }
 
@@ -75,7 +72,7 @@
 .noteText {
   margin: 0;
   white-space: pre-wrap;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
 }
 
@@ -112,8 +109,7 @@
   flex: 1;
   overflow: hidden;
   /* max-height: 150px; Set a fixed height */
-  overflow-y: auto;
-  padding-right: 20px;
+  /* overflow-y: auto; */
 }
 
 .noteActions {
@@ -133,7 +129,7 @@
 .popupContainer {
   display: flex;
   flex-direction: row;
-  gap: 16px; 
+  /* gap: 16px;  */
   align-items: flex-start;
 }
 

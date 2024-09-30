@@ -10,17 +10,23 @@ import {
   Button,
   Snackbar,
   Alert,
+  Collapse,
 } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
+import ReplayCircleFilledIcon from "@mui/icons-material/ReplayCircleFilled";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SaveIcon from "@mui/icons-material/Save";
+import ArticleIcon from "@mui/icons-material/Article";
+import ArticleOutlinedIcon from "@mui/icons-material/Article";
+import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import styles from "../styles/RecoardingView.module.css";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 import ReacodringLoader from "./RecoardingAnimation.jsx";
 import ProcessingAnimation from "./ProcessingAnimation";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Image from "next/image";
 import AudioHeader from "./AudioHeader";
@@ -57,6 +63,7 @@ const ReacodringView = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
   const [selectedNoteOpen, setSelectedNoteOpen] = useState(false);
+  const [collapseOpen, setCollapseOpen] = useState(false);
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -82,6 +89,7 @@ const ReacodringView = () => {
   };
 
   const handleCloseDialog = () => {
+    setCollapseOpen(false);
     setIsResetDialogOpen(true); // Open the reset confirmation dialog instead of closing the main dialog
     clearInterval(timerRef.current);
   };
@@ -146,6 +154,7 @@ const ReacodringView = () => {
 
       // Proceed with recording if permission is granted
       localStorage.setItem("finalText", "");
+      setCollapseOpen(false);
       setTranscript("");
       setCorrectedTranscript("");
       setIsRecord(true);
@@ -213,6 +222,16 @@ const ReacodringView = () => {
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
   async function run(transcript) {
+    // Trim any whitespace from the transcript and check if it's empty
+    if (!transcript.trim()) {
+      // Set a message for empty input
+      setCorrectedTranscript(
+        "Oops! It looks like we couldn't catch any words. Please give it another try when you're ready!"
+      );
+      setIsLoading(false);
+      return;
+    }
+
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text`;
 
@@ -233,7 +252,7 @@ const ReacodringView = () => {
     }
   }
 
-  const saveTranscriptToAPI = async (transcript) => {
+  const saveTranscriptToAPI = async (aiGeneratedText) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/add`,
@@ -243,7 +262,10 @@ const ReacodringView = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
           },
-          body: JSON.stringify({ transcribedText: transcript }),
+          body: JSON.stringify({
+            transcribedText: aiGeneratedText,
+            userTextInput: transcript,
+          }),
         }
       );
 
@@ -415,9 +437,15 @@ const ReacodringView = () => {
 
   // Function to close the dialog
   const handleClose = () => {
+    setCollapseOpen(false);
     setSelectedNoteOpen(false);
     setSelectedNote(null);
   };
+
+  const toggleCollapse = () => {
+    setCollapseOpen(!collapseOpen);
+  };
+
   return (
     <Box
       style={{
@@ -518,15 +546,11 @@ const ReacodringView = () => {
         </Box>
         <Dialog
           open={isDialogOpen}
-          // onClose={handleCloseDialog}
-          // onClose={() => setIsDialogOpen(false)}
-
           onClose={
             isRecord || correctedTranscript
               ? ShowEraseConfirmationFunction
               : null
           }
-          // onClose={ShowEraseConfirmationFunction}
           sx={{
             "& .MuiPaper-root": {
               backgroundColor: "#B9D9D7",
@@ -540,23 +564,34 @@ const ReacodringView = () => {
           }}
         >
           <DialogTitle
-            sx={{ color: "#4d4d4d", textAlign: "center", fontWeight: "600" }}
+            sx={{
+              color: "#4d4d4d",
+              textAlign: "center",
+              fontWeight: "600",
+            }}
           >
             {isRecord && !correctedTranscript && "Listening to your thoughts"}
             {correctedTranscript && transcript && "Your transcript is ready!"}
-            {correctedTranscript && !transcript && "Please Provide Text"}
+            {correctedTranscript &&
+              !transcript &&
+              "Please share your thoughts."}
           </DialogTitle>
-          <DialogContent
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: "200px",
-            }}
-          >
-            {!correctedTranscript && (
-              <>
+          <DialogContent>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "200px",
+                overflowY: "auto",
+              }}
+            >
+              {!correctedTranscript && (
+              <Box sx={{
+                textAlign:"center",
+                marginTop:"100px",
+              }}>
                 <Typography variant="h6" sx={{ color: "#4d4d4d" }}>
                   {isRecord
                     ? `${Math.floor(timer / 60)}:${("0" + (timer % 60)).slice(
@@ -571,13 +606,19 @@ const ReacodringView = () => {
                     <ProcessingAnimation time={timer} />
                   )}
                 </Typography>
-              </>
+              </Box>
             )}
             {correctedTranscript && (
-              <Typography variant="body1" sx={{ color: "#4d4d4d", mt: 2 }}>
+              <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
                 {correctedTranscript}
-              </Typography>
+              </Typography> 
             )}
+              {collapseOpen && correctedTranscript && (
+                <Typography variant="body2" color="textSecondary">
+                  {transcript}
+                </Typography>
+              )}
+            </Box>
           </DialogContent>
           <DialogActions
             sx={{
@@ -619,7 +660,7 @@ const ReacodringView = () => {
                           onClick={() => handleCopyNote(correctedTranscript)}
                           color="primary"
                         >
-                          <ContentCopyIcon sx={{ color: "#51A09B" }} />
+                          <FileCopyIcon sx={{ color: "#51A09B" }} />
                         </IconButton>
                       </Tooltip>
                       {/* <Tooltip title={tooltipTexts.download}>
@@ -632,7 +673,22 @@ const ReacodringView = () => {
                           onClick={handleDeleteCurrentNote}
                           color="primary"
                         >
-                          <DeleteOutlineIcon sx={{ color: "#51A09B" }} />
+                          <DeleteIcon sx={{ color: "#51A09B" }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          collapseOpen
+                            ? "hide original transcript"
+                            : "view original transcript"
+                        }
+                      >
+                        <IconButton onClick={toggleCollapse} color="primary">
+                          {collapseOpen ? (
+                            <ArticleTwoToneIcon sx={{ color: "#51A09B" }} />
+                          ) : (
+                            <ArticleIcon sx={{ color: "#51A09B" }} />
+                          )}
                         </IconButton>
                       </Tooltip>
                     </>
@@ -701,7 +757,7 @@ const ReacodringView = () => {
               Reset
             </Button>
             <Button onClick={handleKeepRecording} variant="contained">
-              {!correctedTranscript && isRecord ? "Keep Recording" : "close"}
+              {!correctedTranscript && isRecord ? "Keep Recording" : "Close"}
             </Button>
           </DialogActions>
         </Dialog>
@@ -765,6 +821,11 @@ const ReacodringView = () => {
               <Box className={styles.popupNoteCard}>
                 <Typography variant="body2">
                   {selectedNote && selectedNote.transcribedText}
+                  {collapseOpen && (
+                    <Typography variant="body2" color="textSecondary" fontStyle="italic">
+                      {selectedNote && selectedNote.userTextInput}
+                    </Typography>
+                  )}
                 </Typography>
               </Box>
               <Box className={styles.popupActionCard}>
@@ -773,9 +834,7 @@ const ReacodringView = () => {
                     className={styles.popupActionIcon}
                     onClick={() => handleCopyNote(selectedNote.transcribedText)}
                   >
-                    <ContentCopyIcon
-                      sx={{ color: "#51A09B", fontSize: "20px" }}
-                    />
+                    <FileCopyIcon sx={{ color: "#51A09B", fontSize: "20px" }} />
                   </IconButton>
                 </Tooltip>
 
@@ -784,9 +843,30 @@ const ReacodringView = () => {
                     className={styles.popupActionIcon}
                     onClick={() => handleDeleteNote(selectedNote.id)}
                   >
-                    <DeleteOutlineIcon
-                      sx={{ color: "#51A09B", fontSize: "23px" }}
-                    />
+                    <DeleteIcon sx={{ color: "#51A09B", fontSize: "23px" }} />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    collapseOpen
+                      ? "hide original transcript"
+                      : "view original transcript"
+                  }
+                >
+                  <IconButton
+                    className={styles.popupActionIcon}
+                    onClick={toggleCollapse}
+                  >
+                    {collapseOpen ? (
+                      <ArticleTwoToneIcon
+                        sx={{ color: "#51A09B", fontSize: "23px" }}
+                      />
+                    ) : (
+                      <ArticleIcon
+                        sx={{ color: "#51A09B", fontSize: "23px" }}
+                      />
+                    )}
                   </IconButton>
                 </Tooltip>
               </Box>
