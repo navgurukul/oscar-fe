@@ -233,8 +233,13 @@ const ReacodringView = () => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text`;
-
+    // const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text`;
+    const prompt =
+    `Please correct the following text for any spelling and grammatical errors, only in English. \n" +
+    "Do not change the structure, paraphrase, translate, or alter the original meaning of the text. \n" +
+    "Keep the text strictly in English. \n" +
+    "For longer texts, make sure to carefully correct all grammatical errors and spelling mistakes without modifying the original structure or meaning. \n" +
+    "If the text is too short, just fix grammar or spelling without making any other changes:\n: ${transcript}`
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -243,7 +248,7 @@ const ReacodringView = () => {
       // Simulate a 5-second delay before setting the corrected text
       setTimeout(() => {
         setCorrectedTranscript(text);
-        // console.log("AI Corrected Text:", text);
+        console.log("AI Corrected Text:", text);
         setIsLoading(false);
       }, 5000);
     } catch (error) {
