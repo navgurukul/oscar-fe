@@ -239,7 +239,7 @@ const ReacodringView = () => {
     "Do not change the structure, paraphrase, translate, or alter the original meaning of the text. \n" +
     "Keep the text strictly in English. \n" +
     "For longer texts, make sure to carefully correct all grammatical errors and spelling mistakes without modifying the original structure or meaning. \n" +
-    "If the text is too short, just fix grammar or spelling without making any other changes:\n: ${transcript}`
+    "If the text is too short, just fix grammar or spelling without making any other changes, Ensure that no part of the text is trimmed or omitted for any reason, regardless of length or complexity:\n: ${transcript}`
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
