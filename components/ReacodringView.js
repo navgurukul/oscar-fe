@@ -233,13 +233,13 @@ const ReacodringView = () => {
     }
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    // const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text`;
-    const prompt =
-    `Please correct the following text for any spelling and grammatical errors, only in English. \n" +
-    "Do not change the structure, paraphrase, translate, or alter the original meaning of the text. \n" +
-    "Keep the text strictly in English. \n" +
-    "For longer texts, make sure to carefully correct all grammatical errors and spelling mistakes without modifying the original structure or meaning. \n" +
-    "If the text is too short, just fix grammar or spelling without making any other changes, Ensure that no part of the text is trimmed or omitted for any reason, regardless of length or complexity:\n: ${transcript}`
+    const prompt = 
+    `Please correct the following text for any spelling and grammatical errors, only in English. 
+    Do not change the structure, paraphrase, translate, or alter the original meaning of the text. 
+    Keep the text strictly in English. For longer texts, make sure to carefully correct all grammatical errors 
+    and spelling mistakes without modifying the original structure or meaning. 
+    If the text is too short, just fix grammar or spelling without making any other changes. 
+    Ensure that no part of the text is trimmed or omitted for any reason, regardless of length or complexity:\n${transcript}`;
     try {
       const result = await model.generateContent(prompt);
       const response = await result.response;
@@ -781,7 +781,7 @@ const ReacodringView = () => {
               </Typography>
             ) : (
               <Typography variant="body1">
-                Doing this action will delete your transcript. Do you still wish
+                Unsaved changes! This action will remove your transcript. Do you still wish
                 to continue?
               </Typography>
             )}
