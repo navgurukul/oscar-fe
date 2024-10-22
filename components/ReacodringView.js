@@ -826,6 +826,17 @@ const ReacodringView = () => {
               <Box className={styles.popupNoteCard}>
                 <Typography variant="body2">
                   {selectedNote && selectedNote.transcribedText}
+                  {selectedNote && (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      display="block"
+                      align="right"
+                      mt={2}
+                    >
+                      {new Date(selectedNote.createdAt).toLocaleString()}
+                    </Typography>
+                  )}
                   {collapseOpen && (
                     <Typography variant="body2" color="textSecondary" fontStyle="italic">
                       {selectedNote && selectedNote.userTextInput}
