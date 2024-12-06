@@ -133,7 +133,7 @@ const ReacodringView = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("This Browser does not support the Web Speech API, For Best Experience Switch to Crome or Edge");
+      alert("This Browser does not support the Web Speech API, For Best Experience Switch to Chrome or Edge");
       setIsDialogOpen(false)
       return false;
     }
@@ -221,6 +221,9 @@ const ReacodringView = () => {
 
   // const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const GOOGLE_TOKEN = localStorage.getItem("googleToken");
+
   async function run(transcript) {
     // Trim any whitespace from the transcript and check if it's empty
     if (!transcript.trim()) {
@@ -232,13 +235,12 @@ const ReacodringView = () => {
       return;
     }
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/optimize/optimize-text`,
+      const response = await fetch(`${BASE_URL}/api/v1/optimize/optimize-text`, 
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
           body: JSON.stringify({
             user_input: transcript, 
@@ -251,16 +253,12 @@ const ReacodringView = () => {
       // Convert response to JSON
       const responseData = await response.json();
 
-      // Log the data to see the format
-      console.log("API Response:", responseData);
-
       // Access the 'output' value
       const outputText = responseData.data.output;
 
       // Simulate a 5-second delay before setting the corrected text
       setTimeout(() => {
         setCorrectedTranscript(outputText);  // Set the corrected text
-        console.log("AI Corrected Text:", outputText);  // Log the corrected text
         setIsLoading(false);
       }, 5000);
 
@@ -272,13 +270,12 @@ const ReacodringView = () => {
 
   const saveTranscriptToAPI = async (aiGeneratedText) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/add`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions/add`, 
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
           body: JSON.stringify({
             transcribedText: aiGeneratedText,
@@ -302,12 +299,11 @@ const ReacodringView = () => {
 
   const fetchTranscriptions = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
         }
       );
@@ -356,12 +352,11 @@ const ReacodringView = () => {
 
   const confirmDeleteNote = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/${noteToDelete.id}`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions/${noteToDelete.id}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
         }
       );
