@@ -131,20 +131,20 @@ const ReacodringView = () => {
 
   function checkSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
+
     if (!SpeechRecognition) {
-      alert("This Browser does not support the Web Speech API, For Best Experience Switch to Crome or Edge");
+      alert("This Browser does not support the Web Speech API, For Best Experience Switch to Chrome or Edge");
       setIsDialogOpen(false)
       return false;
     }
-  
+
     recognitionRef.current = new SpeechRecognition();
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
     return true;
   }
 
-  
+
 
   const handleStartRecording = async () => {
     try {
@@ -219,7 +219,10 @@ const ReacodringView = () => {
     setTimer(3 * 60); // Reset timer to 3 minutes
   };
 
-  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+  // const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  const GOOGLE_TOKEN = localStorage.getItem("googleToken");
 
   async function run(transcript) {
     // Trim any whitespace from the transcript and check if it's empty
@@ -231,26 +234,34 @@ const ReacodringView = () => {
       setIsLoading(false);
       return;
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = 
-    `Please correct the following text for any spelling and grammatical errors, only in English. 
-    Do not change the structure, paraphrase, translate, or alter the original meaning of the text. 
-    Keep the text strictly in English. For longer texts, make sure to carefully correct all grammatical errors 
-    and spelling mistakes without modifying the original structure or meaning. 
-    If the text is too short, just fix grammar or spelling without making any other changes. 
-    Ensure that no part of the text is trimmed or omitted for any reason, regardless of length or complexity:\n${transcript}`;
     try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = await response.text();
+      const response = await fetch(`${BASE_URL}/api/v1/optimize/optimize-text`, 
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
+          },
+          body: JSON.stringify({
+            user_input: transcript, 
+            device_tag: 0,          
+            record_time: 0          
+          }),
+        }
+      );
+
+      // Convert response to JSON
+      const responseData = await response.json();
+
+      // Access the 'output' value
+      const outputText = responseData.data.output;
 
       // Simulate a 5-second delay before setting the corrected text
       setTimeout(() => {
-        setCorrectedTranscript(text);
-        console.log("AI Corrected Text:", text);
+        setCorrectedTranscript(outputText);  // Set the corrected text
         setIsLoading(false);
       }, 5000);
+
     } catch (error) {
       console.error("Error:", error);
       setIsLoading(false);
@@ -259,13 +270,12 @@ const ReacodringView = () => {
 
   const saveTranscriptToAPI = async (aiGeneratedText) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/add`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions/add`, 
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
           body: JSON.stringify({
             transcribedText: aiGeneratedText,
@@ -289,12 +299,11 @@ const ReacodringView = () => {
 
   const fetchTranscriptions = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
         }
       );
@@ -304,6 +313,9 @@ const ReacodringView = () => {
       }
 
       const data = await response.json();
+      const sortedNotes = data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    setNotes(sortedNotes);
       setNotes(data.data.map((item) => item));
     } catch (error) {
       console.error("Error:", error);
@@ -317,7 +329,13 @@ const ReacodringView = () => {
   const handleSaveNote = async () => {
     const savedNote = await saveTranscriptToAPI(correctedTranscript);
     if (savedNote) {
-      setNotes((prevNotes) => [...prevNotes, savedNote]);
+      setNotes((prevNotes) => {
+        const updatedNotes = [...prevNotes, savedNote];
+  
+        // Sort notes to maintain correct order based on created_at (or similar) timestamp
+        return updatedNotes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      });
+  
       fetchTranscriptions(); // Fetch the updated list of notes
       setSnackbarMessage("Note saved successfully!");
       setSnackbarOpen(true); // Show Snackbar
@@ -325,7 +343,8 @@ const ReacodringView = () => {
     setCorrectedTranscript("");
     setIsDialogOpen(false);
   };
-
+    
+  
   const handleDeleteNote = (id) => {
     setNoteToDelete({ id });
     setIsDeleteDialogOpen(true);
@@ -333,12 +352,11 @@ const ReacodringView = () => {
 
   const confirmDeleteNote = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/transcriptions/${noteToDelete.id}`,
+      const response = await fetch(`${BASE_URL}/api/v1/transcriptions/${noteToDelete.id}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+            Authorization: `Bearer ${GOOGLE_TOKEN}`,
           },
         }
       );
@@ -593,31 +611,31 @@ const ReacodringView = () => {
               }}
             >
               {!correctedTranscript && (
-              <Box sx={{
-                textAlign:"center",
-                marginTop:"100px",
-              }}>
-                <Typography variant="h6" sx={{ color: "#4d4d4d" }}>
-                  {isRecord
-                    ? `${Math.floor(timer / 60)}:${("0" + (timer % 60)).slice(
+                <Box sx={{
+                  textAlign: "center",
+                  marginTop: "100px",
+                }}>
+                  <Typography variant="h6" sx={{ color: "#4d4d4d" }}>
+                    {isRecord
+                      ? `${Math.floor(timer / 60)}:${("0" + (timer % 60)).slice(
                         -2
                       )}`
-                    : ""}
-                </Typography>
+                      : ""}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
+                    {isRecord ? (
+                      <ReacodringLoader />
+                    ) : (
+                      <ProcessingAnimation time={timer} />
+                    )}
+                  </Typography>
+                </Box>
+              )}
+              {correctedTranscript && (
                 <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
-                  {isRecord ? (
-                    <ReacodringLoader />
-                  ) : (
-                    <ProcessingAnimation time={timer} />
-                  )}
+                  {correctedTranscript}
                 </Typography>
-              </Box>
-            )}
-            {correctedTranscript && (
-              <Typography variant="body1" sx={{ color: "#4d4d4d" }}>
-                {correctedTranscript}
-              </Typography> 
-            )}
+              )}
               {collapseOpen && correctedTranscript && (
                 <Typography variant="body2" color="textSecondary">
                   {transcript}
@@ -809,17 +827,17 @@ const ReacodringView = () => {
           open={selectedNoteOpen}
           onClose={handleClose}
           fullWidth
-          // PaperProps={{
-          //   style: {
-          //     backgroundColor: "transparent",
-          //     boxShadow: "12px 12px 12px 12px #fff",
-          //   },
-          // }}
-          // BackdropProps={{
-          //   style: {
-          //     backgroundColor: "transparent",
-          //   },
-          // }}
+        // PaperProps={{
+        //   style: {
+        //     backgroundColor: "transparent",
+        //     boxShadow: "12px 12px 12px 12px #fff",
+        //   },
+        // }}
+        // BackdropProps={{
+        //   style: {
+        //     backgroundColor: "transparent",
+        //   },
+        // }}
         >
           <DialogContent>
             <Box className={styles.popupContainer}>
