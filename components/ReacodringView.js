@@ -64,6 +64,7 @@ const ReacodringView = () => {
   const [selectedNote, setSelectedNote] = useState(null);
   const [selectedNoteOpen, setSelectedNoteOpen] = useState(false);
   const [collapseOpen, setCollapseOpen] = useState(false);
+  const [showerror, setShowError] = useState(false);
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -99,6 +100,7 @@ const ReacodringView = () => {
     setIsRecord(false);
     setTranscript("");
     setCorrectedTranscript("");
+    setShowError(false);
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -263,8 +265,24 @@ const ReacodringView = () => {
       }, 5000);
 
     } catch (error) {
+      const status = error.status;
+
+      if (status === 429) {
+        // Quota exceeded
+        setCorrectedTranscript(
+          "⚠️ Too Many Requests: \nWe're handling a high volume of requests right now. \nPlease try again in a few minutes."
+        );
+      } else if (status >= 500 && status < 600) {
+        // Server errors (5xx)
+        setCorrectedTranscript(
+          "The server is currently unavailable. Please try again in a while."
+        );
+      } else {
+        setCorrectedTranscript("An unexpected error occurred. Please try again.");
+      }
       console.error("Error:", error);
       setIsLoading(false);
+      setShowError(true);
     }
   }
 
@@ -438,6 +456,7 @@ const ReacodringView = () => {
     setIsDialogOpen(false);
     setTranscript("");
     setCorrectedTranscript("");
+    setShowError(false);
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsRecord(false);
@@ -650,96 +669,101 @@ const ReacodringView = () => {
               gap: isSmallScreen ? "30px" : "60px",
             }}
           >
-            {!correctedTranscript && isRecord && (
-              <IconButton
-                onClick={handleCloseDialog}
-                color="secondary"
-                sx={{
-                  padding: isSmallScreen ? "8px" : "12px",
-                  backgroundColor: "#51a09b",
-                }}
-              >
-                <RestartAltIcon sx={{ color: "#fff" }} />
-              </IconButton>
-            )}
-            {correctedTranscript && (
+            {showerror || notes.length > 0 ? (
+              <Tooltip title={tooltipTexts.restart}>
+                <IconButton onClick={handleCloseDialog} color="secondary">
+                  <RestartAltIcon sx={{ color: "#51A09B" }} />
+                </IconButton>
+              </Tooltip>
+            ) : (
               <>
-                <Box
-                  sx={{
-                    display: "flex",
-                    backgroundColor: "#fff",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <Tooltip title={tooltipTexts.restart}>
-                    <IconButton onClick={handleCloseDialog} color="secondary">
-                      <RestartAltIcon sx={{ color: "#51A09B" }} />
-                    </IconButton>
-                  </Tooltip>
-                  {correctedTranscript && transcript && (
-                    <>
-                      <Tooltip title={tooltipTexts.copy}>
-                        <IconButton
-                          onClick={() => handleCopyNote(correctedTranscript)}
-                          color="primary"
+                {!correctedTranscript && isRecord && (
+                  <IconButton
+                    onClick={handleCloseDialog}
+                    color="secondary"
+                    sx={{
+                      padding: isSmallScreen ? "8px" : "12px",
+                      backgroundColor: "#51a09b",
+                    }}
+                  >
+                    <RestartAltIcon sx={{ color: "#fff" }} />
+                  </IconButton>
+                )}
+                {correctedTranscript && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      backgroundColor: "#fff",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <Tooltip title={tooltipTexts.restart}>
+                      <IconButton onClick={handleCloseDialog} color="secondary">
+                        <RestartAltIcon sx={{ color: "#51A09B" }} />
+                      </IconButton>
+                    </Tooltip>
+                    {correctedTranscript && transcript && (
+                      <>
+                        <Tooltip title={tooltipTexts.copy}>
+                          <IconButton
+                            onClick={() => handleCopyNote(correctedTranscript)}
+                            color="primary"
+                            sx={{ color: "#51A09B" }}
+                          >
+                            <FileCopyIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={tooltipTexts.delete}>
+                          <IconButton
+                            onClick={handleDeleteCurrentNote}
+                            color="primary"
+                            sx={{ color: "#51A09B" }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                          title={
+                            collapseOpen
+                              ? "hide original transcript"
+                              : "view original transcript"
+                          }
                         >
-                          <FileCopyIcon sx={{ color: "#51A09B" }} />
-                        </IconButton>
-                      </Tooltip>
-                      {/* <Tooltip title={tooltipTexts.download}>
-                    <IconButton onClick={handleDownloadNote} color="primary">
-                      <DownloadIcon sx={{ color: "#51A09B" }} />
-                    </IconButton>
-                  </Tooltip> */}
-                      <Tooltip title={tooltipTexts.delete}>
-                        <IconButton
-                          onClick={handleDeleteCurrentNote}
-                          color="primary"
-                        >
-                          <DeleteIcon sx={{ color: "#51A09B" }} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip
-                        title={
-                          collapseOpen
-                            ? "hide original transcript"
-                            : "view original transcript"
-                        }
-                      >
-                        <IconButton onClick={toggleCollapse} color="primary">
-                          {collapseOpen ? (
-                            <ArticleTwoToneIcon sx={{ color: "#51A09B" }} />
-                          ) : (
-                            <ArticleIcon sx={{ color: "#51A09B" }} />
-                          )}
-                        </IconButton>
-                      </Tooltip>
-                    </>
-                  )}
-                </Box>
+                          <IconButton
+                            onClick={toggleCollapse}
+                            color="primary"
+                            sx={{ color: "#51A09B" }}
+                          >
+                            {collapseOpen ? <ArticleTwoToneIcon /> : <ArticleIcon />}
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
+                  </Box>
+                )}
+                {isRecord && !correctedTranscript ? (
+                  <IconButton
+                    onClick={handleStopRecording}
+                    color="primary"
+                    sx={{
+                      padding: isSmallScreen ? "8px" : "12px",
+                      backgroundColor: "#51a09b",
+                    }}
+                  >
+                    <StopIcon sx={{ color: "#fff" }} />
+                  </IconButton>
+                ) : correctedTranscript && transcript ? (
+                  <Button
+                    onClick={handleSaveNote}
+                    color="primary"
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                  >
+                    Save
+                  </Button>
+                ) : null}
               </>
             )}
-            {isRecord && !correctedTranscript ? (
-              <IconButton
-                onClick={handleStopRecording}
-                color="primary"
-                sx={{
-                  padding: isSmallScreen ? "8px" : "12px",
-                  backgroundColor: "#51a09b",
-                }}
-              >
-                <StopIcon sx={{ color: "#fff" }} />
-              </IconButton>
-            ) : correctedTranscript && transcript ? (
-              <Button
-                onClick={handleSaveNote}
-                color="primary"
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
-            ) : null}
           </DialogActions>
         </Dialog>
         <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
