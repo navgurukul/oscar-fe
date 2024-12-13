@@ -30,7 +30,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       );
       localStorage.setItem("googleToken", response.data.data.token);
       localStorage.setItem("googleUser", JSON.stringify(response.data.data));
-      router.push("/dashboard?message=Login successful!");
+      router.push("/dashboard?message=Login Successful!");
     } catch (error) {
       console.error("Error during API call:", error);
     } finally {
@@ -51,7 +51,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
     >
       <DialogTitle className={styles.dialogTitle}>
         <Typography variant="h6" color="#51A09B">
-          Please Log in to continue
+          Please Log In To Continue
         </Typography>
       </DialogTitle>
       <DialogContent>
@@ -78,7 +78,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
                   height={20}
                   style={{ borderRadius: "50%", marginInline: "10px" }}
                 />
-                Log in with Google
+                Log In With Google
               </Button>
             )}
           />

@@ -131,6 +131,7 @@
   flex-direction: row;
   /* gap: 16px;  */
   align-items: flex-start;
+  padding: 10px;
 }
 
 /* Note card - full content visible */
@@ -145,10 +146,11 @@
   height: auto; 
 }
 
-/* Action card - white background */
+/* Action card - pxwhite background */
 .popupActionCard {
   background-color: #fff;
   padding: 16px;
+  /* margin-right: 15px; */
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
