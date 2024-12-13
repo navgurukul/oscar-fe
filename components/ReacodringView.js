@@ -53,11 +53,11 @@ const ReacodringView = () => {
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [showEraseConfirmation, setShowEraseConfirmation] = useState(false);
   const [tooltipTexts, setTooltipTexts] = useState({
-    copy: "Copy to clipboard",
-    share: "Share note",
-    download: "Download note",
-    delete: "Delete note",
-    restart: "Restart recording",
+    copy: "Copy To Clipboard",
+    share: "Share Note",
+    download: "Download Note",
+    delete: "Delete Note",
+    restart: "Restart Recording",
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -163,8 +163,16 @@ const ReacodringView = () => {
       recognitionRef.current.interimResults = true;
 
       let finalTranscript = "";
+      let noInputTimer = setTimeout(() => {
+        handleStopRecording();
+        setCorrectedTranscript(
+          "Oops! It looks like we couldn't catch any words. Please give it another try when you're ready!"
+        );
+      }, 5000); // 5 seconds timeout
+      
 
       recognitionRef.current.onresult = (event) => {
+        clearTimeout(noInputTimer);
         let interimTranscript = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const result = event.results[i];
@@ -174,12 +182,16 @@ const ReacodringView = () => {
             interimTranscript += result[0].transcript + " ";
           }
         }
+        console.log(finalTranscript + interimTranscript.trim())
         setTranscript(finalTranscript + interimTranscript.trim());
         localStorage.setItem(
           "finalText",
           finalTranscript + interimTranscript.trim()
         );
       };
+      recognitionRef.current.onerror=(event)=>{
+        console.log(event.error,"recording stop")
+      }
       recognitionRef.current.start();
       startTimer();
     } catch (error) {
@@ -316,6 +328,7 @@ const ReacodringView = () => {
       const sortedNotes = data.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     setNotes(sortedNotes);
+    // here
       setNotes(data.data.map((item) => item));
     } catch (error) {
       console.error("Error:", error);
@@ -411,19 +424,19 @@ const ReacodringView = () => {
     element.download = "transcript.txt";
     document.body.appendChild(element);
     element.click();
-    setTimeout(() => handleTooltipChange("download", "Download note"), 2000);
+    setTimeout(() => handleTooltipChange("download", "Download Note"), 2000);
   };
 
   const handleCopyNote = (correctedTranscript) => {
     navigator.clipboard.writeText(correctedTranscript).then(() => {
       handleTooltipChange("copy", "Copied!");
-      setTimeout(() => handleTooltipChange("copy", "Copy to clipboard"), 2000);
+      setTimeout(() => handleTooltipChange("copy", "Copy To Clipboard"), 2000);
     });
   };
 
   const handleDeleteCurrentNote = () => {
     // Delete the current note
-    handleTooltipChange("delete", "Note deleted");
+    handleTooltipChange("delete", "Note Deleted");
     setCorrectedTranscript("");
     setIsDialogOpen(false);
   };
@@ -597,7 +610,7 @@ const ReacodringView = () => {
             {correctedTranscript && transcript && "Your transcript is ready!"}
             {correctedTranscript &&
               !transcript &&
-              "Please share your thoughts."}
+              "Please Share your Thoughts."}
           </DialogTitle>
           <DialogContent>
             <Box
@@ -669,6 +682,7 @@ const ReacodringView = () => {
                     display: "flex",
                     backgroundColor: "#fff",
                     borderRadius: "10px",
+                    
                   }}
                 >
                   <Tooltip title={tooltipTexts.restart}>
@@ -702,11 +716,30 @@ const ReacodringView = () => {
                       <Tooltip
                         title={
                           collapseOpen
-                            ? "hide original transcript"
-                            : "view original transcript"
+                            ? "Hide Original Transcript"
+                            : "view Original Transcript"
                         }
+                        
+                        sx={{
+                          whiteSpace: "nowrap", // Prevent text wrapping in tooltip
+                          overflow: "visible",  // Allow content overflow in tooltip
+                          textOverflow: "ellipsis",  // Add ellipsis for long text
+                          maxWidth: "none", // Remove any maxWidth that could limit the tooltip width
+                        }}
+                        
                       >
-                        <IconButton onClick={toggleCollapse} color="primary">
+                        <IconButton onClick={toggleCollapse} color="primary"
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",  // Prevent text from wrapping
+                          textOverflow: "ellipsis",  // Add ellipsis if text overflows
+                          padding: "8px",
+                        }}
+                        
+                        >
                           {collapseOpen ? (
                             <ArticleTwoToneIcon sx={{ color: "#51A09B" }} />
                           ) : (
@@ -772,7 +805,7 @@ const ReacodringView = () => {
             <Typography fontWeight={400} fontSize="18px">
               Resetting the recording will erase the current audio note and{" "}
               <br />
-              start a new one.
+              start A New One.
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -862,7 +895,7 @@ const ReacodringView = () => {
                   )}
                 </Typography>
               </Box>
-              <Box className={styles.popupActionCard}>
+              <Box className={styles.popupActionCard }>
                 <Tooltip title="Copy">
                   <IconButton
                     className={styles.popupActionIcon}
@@ -884,13 +917,28 @@ const ReacodringView = () => {
                 <Tooltip
                   title={
                     collapseOpen
-                      ? "hide original transcript"
-                      : "view original transcript"
+                      ? "Hide Original Transcript"
+                      : "View Original Transcript"
                   }
+                  sx={{
+                    whiteSpace: "nowrap", // Prevent text wrapping in tooltip
+                    overflow: "visible",  // Allow content overflow in tooltip
+                    textOverflow: "ellipsis",  // Add ellipsis for long text
+                    maxWidth: "none", // Remove any maxWidth that could limit the tooltip width
+                  }}
                 >
                   <IconButton
                     className={styles.popupActionIcon}
                     onClick={toggleCollapse}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",  // Prevent text from wrapping
+                      textOverflow: "ellipsis",  // Add ellipsis if text overflows
+                      padding: "8px",
+                    }}
                   >
                     {collapseOpen ? (
                       <ArticleTwoToneIcon
@@ -913,7 +961,7 @@ const ReacodringView = () => {
               }}
             >
               <Button variant="contained" onClick={handleClose}>
-                Go to Dashboard
+                Go To Dashboard
               </Button>
             </Box>
           </DialogContent>
