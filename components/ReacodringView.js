@@ -717,7 +717,7 @@ const ReacodringView = () => {
                         title={
                           collapseOpen
                             ? "Hide Original Transcript"
-                            : "view Original Transcript"
+                            : "View Original Transcript"
                         }
                         
                         sx={{
